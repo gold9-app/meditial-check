@@ -1378,6 +1378,76 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
+/* Date Navigation */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.date-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.date-nav-btn:hover:not(:disabled) {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.date-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.date-nav-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 140px;
+  text-align: center;
+}
+.go-today-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.go-today-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.past-date-notice {
+  background: linear-gradient(90deg, #fef3c7, #fde68a);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #92400e;
+  text-align: center;
+  margin-bottom: 14px;
+}
+[data-theme="dark"] .past-date-notice {
+  background: linear-gradient(90deg, rgba(254,243,199,0.12), rgba(253,230,138,0.12));
+  color: #fbbf24;
+}
+
 /* Responsive */
 @media (min-width: 480px) {
   body { padding: 0; }
@@ -1407,6 +1477,7 @@ body {
   </div>
 
   <div class="tab-content active" id="today">
+    <div id="dateNav"></div>
     <div id="todayList"></div>
     <a href="https://meditial.co.kr/" target="_blank" class="cta-btn"><span class="cta-label">다 드셨나요?</span><span class="cta-click">Click!</span></a>
     <div class="guide-section">
@@ -1622,6 +1693,57 @@ function formatDate(d) {
   return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
 }
 
+// --- Selected Date ---
+let selectedDate = new Date();
+
+function selectedDateKey() {
+  const d = selectedDate;
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function isSelectedToday() {
+  return selectedDateKey() === todayKey();
+}
+
+function changeSelectedDate(delta) {
+  const next = new Date(selectedDate);
+  next.setDate(next.getDate() + delta);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  next.setHours(0,0,0,0);
+  if (next > today) return;
+  selectedDate = next;
+  renderDateNav();
+  renderToday();
+}
+
+function goToToday() {
+  selectedDate = new Date();
+  renderDateNav();
+  renderToday();
+}
+
+function renderDateNav() {
+  const container = document.getElementById('dateNav');
+  const isTodaySelected = isSelectedToday();
+  const tomorrow = new Date(selectedDate);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  tomorrow.setHours(0,0,0,0);
+  const isFutureDisabled = tomorrow > today;
+
+  container.innerHTML = `
+    <div class="date-nav">
+      <button class="date-nav-btn" onclick="changeSelectedDate(-1)">◀</button>
+      <span class="date-nav-label">${formatDate(selectedDate)}</span>
+      <button class="date-nav-btn" onclick="changeSelectedDate(1)" ${isFutureDisabled ? 'disabled' : ''}>▶</button>
+      ${!isTodaySelected ? '<button class="go-today-btn" onclick="goToToday()">오늘로</button>' : ''}
+    </div>
+    ${!isTodaySelected ? '<div class="past-date-notice">과거 날짜의 복용 기록을 확인/수정합니다</div>' : ''}
+  `;
+}
+
 // --- Header ---
 document.getElementById('headerDate').textContent = formatDate(new Date());
 
@@ -1678,7 +1800,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
     document.getElementById(item.dataset.tab).classList.add('active');
     if (item.dataset.tab === 'stats') renderStats();
     if (item.dataset.tab === 'manage') renderManage();
-    if (item.dataset.tab === 'today') renderToday();
+    if (item.dataset.tab === 'today') { selectedDate = new Date(); renderToday(); }
   });
 });
 
@@ -1736,6 +1858,7 @@ function renderToday() {
   const container = document.getElementById('todayList');
   renderHeaderProgress();
   renderStreak();
+  renderDateNav();
 
   if (list.length === 0) {
     container.innerHTML = `
@@ -1749,7 +1872,7 @@ function renderToday() {
   }
 
   const records = loadRecords();
-  const key = todayKey();
+  const key = selectedDateKey();
   const todayRec = records[key] || [];
 
   // Check all done
@@ -1799,7 +1922,7 @@ function renderToday() {
 
 function toggleCheck(id, event) {
   const records = loadRecords();
-  const key = todayKey();
+  const key = selectedDateKey();
   if (!records[key]) records[key] = [];
 
   const list = loadSupplements();
@@ -2275,7 +2398,7 @@ function renderCalendar() {
     else if (rate >= 0.5 && rate < 1) level = 3;
     else if (rate >= 1) level = 4;
 
-    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용">${d}</div>`;
+    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용" style="cursor:pointer" onclick="openDateCheck('${dateKey}')">${d}</div>`;
   }
 
   html += '</div>';
@@ -2298,6 +2421,17 @@ function changeCalMonth(delta) {
   if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
   if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
   renderCalendar();
+}
+
+function openDateCheck(dateKey) {
+  const parts = dateKey.split('-');
+  selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  // Switch to today tab
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.nav-item[data-tab="today"]').classList.add('active');
+  document.getElementById('today').classList.add('active');
+  renderToday();
 }
 
 // --- Badge / Achievement System ---
