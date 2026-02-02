@@ -908,7 +908,7 @@ body {
     <input type="hidden" id="editId">
     <div class="form-group">
       <label>이름</label>
-      <select id="inputName">
+      <select id="inputName" onchange="toggleCustomName()">
         <option value="">-- 선택하세요 --</option>
         <option value="블러드싸이클">블러드싸이클</option>
         <option value="헬리컷">헬리컷</option>
@@ -918,7 +918,9 @@ body {
         <option value="혈당컷">혈당컷</option>
         <option value="활성엽산">활성엽산</option>
         <option value="상어연골환">상어연골환</option>
+        <option value="__custom__">직접 입력</option>
       </select>
+      <input type="text" id="inputCustomName" placeholder="영양제 이름을 입력하세요" style="display:none; margin-top:8px;">
     </div>
     <div class="form-group">
       <label>복용 시간</label>
@@ -1210,7 +1212,18 @@ function openModal(editId) {
     if (!s) return;
     document.getElementById('modalTitle').textContent = '영양제 수정';
     document.getElementById('editId').value = editId;
-    document.getElementById('inputName').value = s.name;
+    const nameSelect = document.getElementById('inputName');
+    const customInput = document.getElementById('inputCustomName');
+    const isPreset = [...nameSelect.options].some(o => o.value === s.name && o.value !== '__custom__');
+    if (isPreset) {
+      nameSelect.value = s.name;
+      customInput.style.display = 'none';
+      customInput.value = '';
+    } else {
+      nameSelect.value = '__custom__';
+      customInput.style.display = 'block';
+      customInput.value = s.name;
+    }
     document.getElementById('inputTime').value = s.time;
     document.getElementById('inputDose').value = s.dose;
     document.getElementById('inputStock').value = s.stock;
@@ -1218,6 +1231,8 @@ function openModal(editId) {
     document.getElementById('modalTitle').textContent = '영양제 추가';
     document.getElementById('editId').value = '';
     document.getElementById('inputName').value = '';
+    document.getElementById('inputCustomName').style.display = 'none';
+    document.getElementById('inputCustomName').value = '';
     document.getElementById('inputTime').value = '09:00';
     document.getElementById('inputDose').value = '';
     document.getElementById('inputStock').value = 30;
@@ -1232,8 +1247,21 @@ document.getElementById('modalOverlay').addEventListener('click', (e) => {
   if (e.target === e.currentTarget) closeModal();
 });
 
+function toggleCustomName() {
+  const sel = document.getElementById('inputName');
+  const custom = document.getElementById('inputCustomName');
+  if (sel.value === '__custom__') {
+    custom.style.display = 'block';
+    custom.focus();
+  } else {
+    custom.style.display = 'none';
+    custom.value = '';
+  }
+}
+
 function saveSupplement() {
-  const name = document.getElementById('inputName').value.trim();
+  const sel = document.getElementById('inputName').value;
+  const name = (sel === '__custom__' ? document.getElementById('inputCustomName').value.trim() : sel.trim());
   const time = document.getElementById('inputTime').value;
   const dose = document.getElementById('inputDose').value.trim();
   const stock = parseInt(document.getElementById('inputStock').value) || 0;
