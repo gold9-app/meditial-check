@@ -644,31 +644,6 @@ body {
   backdrop-filter: blur(4px);
 }
 
-/* Backup/Restore */
-.backup-section {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-.backup-btn {
-  flex: 1;
-  padding: 12px;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 10px;
-  background: #fff;
-  cursor: pointer;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #64748b;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.backup-btn:hover {
-  border-color: #2563eb;
-  color: #2563eb;
-  background: #eff6ff;
-  transform: translateY(-1px);
-}
 /* Calendar Heatmap */
 .calendar-section {
   margin-top: 28px;
@@ -899,9 +874,6 @@ body {
   <div class="tab-content" id="manage">
     <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
     <div id="manageList"></div>
-    <div class="backup-section">
-      <button class="backup-btn" onclick="exportData()">📥 데이터 백업</button>
-    </div>
     <div class="guide-section">
       <button class="guide-toggle" onclick="toggleGuide(this)">
         <span>📖 사용법 안내</span>
@@ -923,10 +895,6 @@ body {
         <div class="guide-step">
           <div class="guide-num">4</div>
           <div class="guide-text">재고가 줄어들면 <strong>빨간색</strong>으로 표시돼요.<br>여기서 재고 수량을 조절할 수 있어요.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-num">5</div>
-          <div class="guide-text"><strong>데이터 백업</strong>을 누르면 기록을 저장하고,<br><strong>데이터 복원</strong>으로 다시 불러올 수 있어요.</div>
         </div>
       </div>
     </div>
@@ -1378,24 +1346,6 @@ function esc(str) {
 function toggleGuide(btn) {
   btn.classList.toggle('open');
   document.getElementById('guideBody').classList.toggle('open');
-}
-
-// --- Backup / Restore ---
-function exportData() {
-  const data = {
-    supplements: loadSupplements(),
-    records: loadRecords(),
-    exportDate: new Date().toISOString()
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `meditial-backup-${todayKey()}.json`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 }
 
 // --- Calendar Heatmap ---
