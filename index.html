@@ -853,6 +853,36 @@ body {
   <div class="tab-content active" id="today">
     <div id="todayList"></div>
     <a href="https://meditial.co.kr/" target="_blank" class="cta-btn"><span class="cta-label">다 드셨나요?</span><span class="cta-click">Click!</span></a>
+    <div class="guide-section">
+      <button class="guide-toggle" onclick="toggleGuide(this)">
+        <span>📖 사용법 안내</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="guide-body" id="guideBody">
+        <div class="guide-step">
+          <div class="guide-num">1</div>
+          <div class="guide-text"><strong>관리</strong> 탭에서 <strong>+ 영양제 추가</strong> 버튼을 눌러<br>내가 먹는 영양제를 등록해요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">2</div>
+          <div class="guide-text"><strong>오늘</strong> 탭에서 영양제를 먹을 때마다<br>동그란 버튼을 눌러 체크해요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">3</div>
+          <div class="guide-text"><strong>통계</strong> 탭에서 내 복용 기록과<br>캘린더를 한눈에 확인할 수 있어요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">4</div>
+          <div class="guide-text">재고가 줄어들면 <strong>빨간색</strong>으로 표시돼요.<br><strong>관리</strong> 탭에서 재고 수량을 조절할 수 있어요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">5</div>
+          <div class="guide-text"><strong>앱처럼 사용하기</strong><br>
+            아이폰: 사파리 하단 <strong>공유(↑)</strong> → <strong>홈 화면에 추가</strong><br>
+            안드로이드: 크롬 상단 <strong>메뉴(⋮)</strong> → <strong>홈 화면에 추가</strong></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="tab-content" id="stats">
@@ -874,36 +904,6 @@ body {
   <div class="tab-content" id="manage">
     <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
     <div id="manageList"></div>
-    <div class="guide-section">
-      <button class="guide-toggle" onclick="toggleGuide(this)">
-        <span>📖 사용법 안내</span>
-        <span class="arrow">▼</span>
-      </button>
-      <div class="guide-body" id="guideBody">
-        <div class="guide-step">
-          <div class="guide-num">1</div>
-          <div class="guide-text">위의 <strong>+ 영양제 추가</strong> 버튼을 눌러<br>내가 먹는 영양제를 등록해요.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-num">2</div>
-          <div class="guide-text"><strong>오늘</strong> 탭에서 영양제를 먹을 때마다<br>동그란 버튼을 눌러 체크해요.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-num">3</div>
-          <div class="guide-text"><strong>통계</strong> 탭에서 내 복용 기록과<br>캘린더를 한눈에 확인할 수 있어요.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-num">4</div>
-          <div class="guide-text">재고가 줄어들면 <strong>빨간색</strong>으로 표시돼요.<br>여기서 재고 수량을 조절할 수 있어요.</div>
-        </div>
-        <div class="guide-step">
-          <div class="guide-num">5</div>
-          <div class="guide-text"><strong>앱처럼 사용하기</strong><br>
-            아이폰: 사파리 하단 <strong>공유(↑)</strong> → <strong>홈 화면에 추가</strong><br>
-            안드로이드: 크롬 상단 <strong>메뉴(⋮)</strong> → <strong>홈 화면에 추가</strong></div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
