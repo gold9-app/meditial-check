@@ -345,9 +345,9 @@ body {
   animation: celebrateBounce 1s ease-in-out infinite;
 }
 @keyframes celebrateBounce {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.1) rotate(-5deg); }
-  75% { transform: scale(1.1) rotate(5deg); }
+  0% { transform: scale(1) rotateY(0deg); }
+  50% { transform: scale(1.1) rotateY(180deg); }
+  100% { transform: scale(1) rotateY(360deg); }
 }
 .completion-banner .celebrate-title {
   font-size: 1.1rem;
@@ -560,82 +560,66 @@ body {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-/* Today donut in stats */
-.today-donut-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  background: var(--bg-secondary);
-  border-radius: 18px;
+/* Savings Hero */
+.savings-hero {
+  text-align: center;
   padding: 28px 20px;
   margin-bottom: 24px;
-  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1.5px solid #fbbf24;
+  box-shadow: 0 0 12px rgba(251,191,36,0.2);
+  animation: fadeInUp 0.5s ease;
 }
-.donut-wrap {
-  position: relative;
-  width: 130px;
-  height: 130px;
-  flex-shrink: 0;
+[data-theme="dark"] .savings-hero {
+  background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(245,158,11,0.15));
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245,158,11,0.15);
 }
-.donut-wrap svg { transform: rotate(-90deg); }
-.donut-bg {
-  fill: none;
-  stroke: var(--bg-tertiary);
-  stroke-width: 6;
+.savings-hero-icon {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  animation: celebrateBounce 1s ease-in-out infinite;
 }
-.donut-bar {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 6;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.donut-text {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-.donut-text .donut-pct {
-  font-size: 1.8rem;
+.savings-hero-amount {
+  font-size: 2.2rem;
   font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
 }
-.donut-text .donut-label {
-  font-size: 0.72rem;
+.savings-hero-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+.savings-hero-bar-wrap {
+  max-width: 280px;
+  margin: 0 auto;
+}
+.savings-hero-bar {
+  height: 10px;
+  background: rgba(251,191,36,0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.savings-hero-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 5px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.savings-hero-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
   color: var(--text-muted);
   margin-top: 4px;
   font-weight: 500;
-}
-.donut-info {
-  text-align: center;
-  width: 100%;
-}
-.donut-info .donut-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-}
-.donut-info .donut-stats {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-}
-.donut-info .donut-stat-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-.donut-info .donut-stat-item .dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 /* Streak badge */
@@ -1109,6 +1093,7 @@ body {
   aspect-ratio: 1;
   border-radius: 6px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 0.68rem;
@@ -1116,6 +1101,7 @@ body {
   color: var(--text-secondary);
   position: relative;
   transition: all 0.2s;
+  overflow: hidden;
 }
 .calendar-day:hover {
   transform: scale(1.15);
@@ -1127,14 +1113,33 @@ body {
 .calendar-day.level-1 { background: #dbeafe; color: #1e40af; }
 .calendar-day.level-2 { background: #93c5fd; color: #1e3a8a; }
 .calendar-day.level-3 { background: #3b82f6; color: #fff; }
-.calendar-day.level-4 { background: #1d4ed8; color: #fff; }
+.calendar-day.level-4 {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  color: #fff;
+  border: 1.5px solid #fbbf24;
+  box-shadow: 0 0 6px rgba(251,191,36,0.5), inset 0 0 4px rgba(251,191,36,0.15);
+  animation: goldShimmer 2s ease-in-out infinite;
+}
+@keyframes goldShimmer {
+  0%, 100% { box-shadow: 0 0 6px rgba(251,191,36,0.4), inset 0 0 4px rgba(251,191,36,0.1); }
+  50% { box-shadow: 0 0 12px rgba(251,191,36,0.7), inset 0 0 6px rgba(251,191,36,0.25); }
+}
 [data-theme="dark"] .calendar-day.level-1 { background: rgba(59,130,246,0.2); color: #93c5fd; }
 [data-theme="dark"] .calendar-day.level-2 { background: rgba(59,130,246,0.35); color: #bfdbfe; }
 [data-theme="dark"] .calendar-day.level-3 { background: rgba(59,130,246,0.55); color: #fff; }
-[data-theme="dark"] .calendar-day.level-4 { background: rgba(59,130,246,0.8); color: #fff; }
+[data-theme="dark"] .calendar-day.level-4 {
+  background: rgba(59,130,246,0.8);
+  color: #fff;
+  border: 1.5px solid #f59e0b;
+  box-shadow: 0 0 6px rgba(245,158,11,0.5), inset 0 0 4px rgba(245,158,11,0.15);
+  animation: goldShimmer 2s ease-in-out infinite;
+}
 .calendar-day.today {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
+}
+.calendar-day.level-4.today {
+  outline: none;
 }
 .calendar-legend {
   display: flex;
@@ -1341,6 +1346,111 @@ body {
 .badge-popup-close:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(245,158,11,0.4);
+}
+
+/* Badge Detail Modal */
+.badge-detail-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--modal-overlay);
+  backdrop-filter: blur(6px);
+  z-index: 250;
+  justify-content: center;
+  align-items: center;
+}
+.badge-detail-overlay.active {
+  display: flex;
+  animation: overlayFadeIn 0.3s ease;
+}
+.badge-detail-content {
+  background: var(--bg-primary);
+  border-radius: 24px;
+  padding: 40px 32px 32px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  position: relative;
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  animation: badgeDetailIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.badge-detail-content.unlocked {
+  border-color: #f59e0b;
+  box-shadow: 0 0 40px rgba(245,158,11,0.2);
+}
+@keyframes badgeDetailIn {
+  0% { opacity: 0; transform: scale(0.3) rotate(-360deg); }
+  60% { transform: scale(1.05) rotate(10deg); }
+  80% { transform: scale(0.98) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+.badge-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+}
+.badge-detail-close:hover {
+  background: var(--bg-tertiary);
+  transform: scale(1.1);
+}
+.badge-detail-icon {
+  font-size: 5rem;
+  display: block;
+  margin-bottom: 16px;
+  line-height: 1;
+}
+.badge-detail-content.unlocked .badge-detail-icon {
+  animation: badgeDetailSpin 1s ease-out;
+}
+@keyframes badgeDetailSpin {
+  0% { transform: rotateY(0deg) scale(0.5); opacity: 0; }
+  50% { transform: rotateY(540deg) scale(1.2); opacity: 1; }
+  100% { transform: rotateY(720deg) scale(1); }
+}
+.badge-detail-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.badge-detail-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.badge-detail-status {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 8px;
+}
+.badge-detail-status.earned {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(251,191,36,0.2));
+  color: #f59e0b;
+  border: 1px solid rgba(245,158,11,0.3);
+}
+.badge-detail-status.locked {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
 }
 
 /* Guide */
@@ -1574,13 +1684,14 @@ body {
   font-size: 1.1rem;
   transform: translateX(-50%);
   transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: piggyBounce 0.45s ease-in-out infinite;
+  animation: coinSpin 1s ease-in-out infinite;
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
   left: 0%;
 }
-@keyframes piggyBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-4px); }
+@keyframes coinSpin {
+  0% { transform: translateX(-50%) translateY(0) rotateY(0deg); }
+  50% { transform: translateX(-50%) translateY(-4px) rotateY(180deg); }
+  100% { transform: translateX(-50%) translateY(0) rotateY(360deg); }
 }
 .calendar-savings-summary {
   text-align: center;
@@ -1597,10 +1708,24 @@ body {
   color: #f59e0b;
   font-weight: 700;
 }
-.calendar-day.level-4 .day-savings {
-  font-size: 0.55rem;
+.calendar-day.level-4 .day-stamp {
+  font-size: 0.48rem;
   line-height: 1;
-  display: block;
+  font-weight: 800;
+  color: #fbbf24;
+  border: 1.5px solid #fbbf24;
+  border-radius: 3px;
+  padding: 1.5px 3px;
+  margin-top: 2px;
+  letter-spacing: -0.2px;
+  transform: rotate(-8deg);
+  opacity: 0.9;
+  text-shadow: 0 0 2px rgba(0,0,0,0.3);
+  animation: stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes stampIn {
+  0% { transform: rotate(-8deg) scale(2); opacity: 0; }
+  100% { transform: rotate(-8deg) scale(1); opacity: 0.9; }
 }
 
 /* Responsive */
@@ -1674,7 +1799,7 @@ body {
   </div>
 
   <div class="tab-content" id="stats">
-    <div id="todayDonut"></div>
+    <div id="savingsHero"></div>
     <div class="stat-period">
       <button class="period-btn active" data-days="7">최근 7일</button>
       <button class="period-btn" data-days="30">최근 30일</button>
@@ -1721,6 +1846,17 @@ body {
     <div class="badge-popup-name" id="badgePopupName"></div>
     <div class="badge-popup-desc" id="badgePopupDesc"></div>
     <button class="badge-popup-close" onclick="closeBadgePopup()">확인</button>
+  </div>
+</div>
+
+<!-- Badge Detail Modal -->
+<div class="badge-detail-overlay" id="badgeDetail">
+  <div class="badge-detail-content" id="badgeDetailContent">
+    <button class="badge-detail-close" onclick="closeBadgeDetail()">✕</button>
+    <span class="badge-detail-icon" id="badgeDetailIcon"></span>
+    <div class="badge-detail-name" id="badgeDetailName"></div>
+    <div class="badge-detail-desc" id="badgeDetailDesc"></div>
+    <div class="badge-detail-status" id="badgeDetailStatus"></div>
   </div>
 </div>
 
@@ -2004,12 +2140,12 @@ function renderSavingsTrack() {
   container.innerHTML = `
     <div class="savings-track">
       <div class="savings-track-labels">
-        <span class="savings-track-amount">🐷 ${savings.toLocaleString()}원</span>
+        <span class="savings-track-amount">🪙 ${savings.toLocaleString()}원</span>
         <span>${goal.toLocaleString()}원</span>
       </div>
       <div class="savings-track-bar">
         <div class="savings-track-fill" style="width:${pct}%"></div>
-        <div class="savings-track-runner" style="left:${pct}%">🐷</div>
+        <div class="savings-track-runner" style="left:${pct}%">🪙</div>
       </div>
     </div>
   `;
@@ -2164,8 +2300,8 @@ function renderToday() {
     if (allDone) {
       html += `
         <div class="completion-banner">
-          <span class="celebrate-icon">🎉</span>
-          <div class="celebrate-title">오늘 영양제 완료!</div>
+          <span class="celebrate-icon">🪙</span>
+          <div class="celebrate-title">오늘의 건강 적립완료!!</div>
           <div class="celebrate-desc">${getDailyRandom(CARE_DONE, 1)}</div>
         </div>`;
     } else {
@@ -2322,42 +2458,28 @@ function renderStats() {
 
   renderStreak();
 
-  // Today donut
+  // Savings hero
   if (list.length > 0) {
-    const key = todayKey();
-    const todayRec = records[key] || [];
-    const taken = list.filter(s => todayRec.includes(s.id)).length;
-    const total = list.length;
-    const pct = Math.round(taken / total * 100);
-    const circ = 2 * Math.PI * 55;
-    const off = circ - (pct / 100) * circ;
-    const clr = pct === 100 ? 'var(--green)' : 'var(--accent)';
-
-    document.getElementById('todayDonut').innerHTML = `
-      <div class="today-donut-section">
-        <div class="donut-wrap">
-          <svg width="130" height="130" viewBox="0 0 130 130">
-            <circle class="donut-bg" cx="65" cy="65" r="55"/>
-            <circle class="donut-bar" cx="65" cy="65" r="55"
-              stroke-dasharray="${circ}"
-              stroke-dashoffset="${off}"
-              style="stroke: ${clr}"/>
-          </svg>
-          <div class="donut-text">
-            <div class="donut-pct" style="color: ${clr}">${pct}%</div>
-            <div class="donut-label">오늘</div>
+    const savings = calcSavings();
+    const goal = 5000;
+    const savPct = Math.min(Math.round(savings / goal * 100), 100);
+    document.getElementById('savingsHero').innerHTML = `
+      <div class="savings-hero">
+        <div class="savings-hero-icon">🪙</div>
+        <div class="savings-hero-amount">${savings.toLocaleString()}원</div>
+        <div class="savings-hero-label">총 적립금</div>
+        <div class="savings-hero-bar-wrap">
+          <div class="savings-hero-bar">
+            <div class="savings-hero-bar-fill" style="width:${savPct}%"></div>
           </div>
-        </div>
-        <div class="donut-info">
-          <div class="donut-title">오늘의 복용 현황</div>
-          <div class="donut-stats">
-            <div class="donut-stat-item"><span class="dot" style="background:var(--green)"></span> 완료 ${taken}개</div>
-            <div class="donut-stat-item"><span class="dot" style="background:var(--border)"></span> 남음 ${total - taken}개</div>
+          <div class="savings-hero-bar-labels">
+            <span>0원</span>
+            <span>목표 ${goal.toLocaleString()}원</span>
           </div>
         </div>
       </div>`;
   } else {
-    document.getElementById('todayDonut').innerHTML = '';
+    document.getElementById('savingsHero').innerHTML = '';
   }
 
   if (list.length === 0) {
@@ -2406,8 +2528,8 @@ function renderStats() {
 
   document.getElementById('statSummary').innerHTML = `
     <div class="stat-box"><div class="value">${overallRate}%</div><div class="label">전체 복용률</div></div>
-    <div class="stat-box"><div class="value">${perfectDays}/${days}</div><div class="label">완벽한 날</div></div>
-    <div class="stat-box"><div class="value">${totalTaken}</div><div class="label">총 복용 횟수</div></div>
+    <div class="stat-box"><div class="value">${perfectDays}일</div><div class="label">완벽한 날</div></div>
+    <div class="stat-box"><div class="value">${(perfectDays * 167).toLocaleString()}원</div><div class="label">적립금</div></div>
   `;
 
   let barsHtml = '';
@@ -2710,8 +2832,8 @@ function renderCalendar() {
     else if (rate >= 0.5 && rate < 1) level = 3;
     else if (rate >= 1) level = 4;
 
-    const perfIcon = level === 4 ? '<span class="day-savings">💰</span>' : '';
-    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용" style="cursor:pointer" onclick="openDateCheck('${dateKey}')">${d}${perfIcon}</div>`;
+    const stamp = level === 4 ? '<span class="day-stamp">적립완료</span>' : '';
+    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용" style="cursor:pointer" onclick="openDateCheck('${dateKey}')">${d}${stamp}</div>`;
   }
 
   html += '</div>';
@@ -2735,7 +2857,7 @@ function renderCalendar() {
     if (list.every(s => dr.includes(s.id))) monthPerfect++;
   }
   const monthSavings = monthPerfect * 167;
-  html += `<div class="calendar-savings-summary">💰 이번 달 적립금: <span>${monthSavings.toLocaleString()}원</span> (완벽 ${monthPerfect}일 × 167원)</div>`;
+  html += `<div class="calendar-savings-summary">💰 총 적립금: <span>${monthSavings.toLocaleString()}원</span></div>`;
 
   container.innerHTML = html;
 }
@@ -3017,7 +3139,7 @@ function renderBadges() {
     catBadges.forEach(b => {
       const isUnlocked = !!earned[b.id];
       html += `
-        <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}">
+        <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}" onclick="openBadgeDetail('${b.id}')" style="cursor:pointer">
           <span class="badge-icon">${b.icon}</span>
           <div class="badge-name">${esc(b.name)}</div>
           <div class="badge-desc">${esc(b.desc)}</div>
@@ -3030,6 +3152,40 @@ function renderBadges() {
   html += '</div>';
   container.innerHTML = html;
 }
+
+// --- Badge Detail Modal ---
+function openBadgeDetail(badgeId) {
+  const badge = BADGES.find(b => b.id === badgeId);
+  if (!badge) return;
+  const earned = loadBadges();
+  const isUnlocked = !!earned[badge.id];
+
+  document.getElementById('badgeDetailIcon').textContent = badge.icon;
+  document.getElementById('badgeDetailName').textContent = badge.name;
+  document.getElementById('badgeDetailDesc').textContent = badge.desc;
+
+  const content = document.getElementById('badgeDetailContent');
+  content.className = 'badge-detail-content' + (isUnlocked ? ' unlocked' : '');
+
+  const status = document.getElementById('badgeDetailStatus');
+  if (isUnlocked) {
+    status.className = 'badge-detail-status earned';
+    status.textContent = '달성 ' + earned[badge.id];
+  } else {
+    status.className = 'badge-detail-status locked';
+    status.textContent = '미달성';
+  }
+
+  document.getElementById('badgeDetail').classList.add('active');
+}
+
+function closeBadgeDetail() {
+  document.getElementById('badgeDetail').classList.remove('active');
+}
+
+document.getElementById('badgeDetail').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeBadgeDetail();
+});
 
 // --- PWA Service Worker ---
 if ('serviceWorker' in navigator) {
