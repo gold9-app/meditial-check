@@ -392,79 +392,6 @@ body {
   color: var(--green);
 }
 
-/* Recovery Button */
-.recovery-section {
-  text-align: center;
-  padding: 22px 20px;
-  background: linear-gradient(135deg, #fff7ed, #ffedd5);
-  border-radius: 16px;
-  margin-bottom: 18px;
-  border: 1px solid #fed7aa;
-  animation: fadeInUp 0.5s ease both;
-}
-[data-theme="dark"] .recovery-section {
-  background: linear-gradient(135deg, rgba(249,115,22,0.06), rgba(249,115,22,0.12));
-  border-color: rgba(251,146,60,0.3);
-}
-.recovery-section .recovery-icon {
-  font-size: 1.6rem;
-  display: block;
-  margin-bottom: 8px;
-}
-.recovery-section .recovery-text {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 14px;
-  line-height: 1.5;
-}
-.recovery-btn {
-  display: inline-block;
-  padding: 12px 28px;
-  border-radius: 24px;
-  border: none;
-  background: linear-gradient(135deg, #f97316, #ea580c);
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(249,115,22,0.3);
-}
-.recovery-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(249,115,22,0.4);
-}
-
-/* Recovery done state */
-.recovery-done {
-  text-align: center;
-  padding: 22px 20px;
-  background: linear-gradient(135deg, var(--accent-bg), #dbeafe);
-  border-radius: 16px;
-  margin-bottom: 18px;
-  border: 1px solid var(--accent-border);
-  animation: celebrateIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-[data-theme="dark"] .recovery-done {
-  background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.12));
-}
-.recovery-done .recovery-done-icon {
-  font-size: 1.6rem;
-  display: block;
-  margin-bottom: 8px;
-}
-.recovery-done .recovery-done-text {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--accent);
-  line-height: 1.6;
-}
-.recovery-done .recovery-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 6px;
-}
 
 .time-group {
   margin-bottom: 24px;
@@ -1994,32 +1921,6 @@ const CARE_NOT_DONE = [
   '오늘도 애쓴 하루였어요.',
 ];
 
-const RECOVERY_BTN_TEXTS = [
-  '오늘은 괜찮아요',
-  '오늘은 여기까지',
-  '내일 다시 할게요',
-  '오늘은 쉬어도 돼요',
-  '다음 한 번이 더 중요해요',
-];
-const RECOVERY_MESSAGES = [
-  '하루 빠졌다고, 그동안의 노력이 사라지진 않아요.',
-  '건강은 연속이 아니라 방향입니다.',
-  '오늘은 쉬고, 내일 다시 이어가면 돼요.',
-  '여기까지 온 것도 충분히 잘한 거예요.',
-  '멈춘 게 아니라, 잠깐 숨 고른 거예요.',
-  '내일 첫 체크부터 다시 시작해요.',
-  '다음 체크가 진짜 중요한 순간이에요.',
-  '다시 시작하기에 딱 좋은 타이밍이에요.',
-  '오늘의 실패는 내일의 이유가 됩니다.',
-  '다시 돌아오면, 메디셜은 항상 여기 있어요.',
-];
-const RECOVERY_STREAK_MESSAGES = [
-  '스트릭은 끊겼지만, 습관은 남아 있어요.',
-  '숫자는 초기화됐지만, 의미는 그대로예요.',
-  '한 번 쉬었다고, 길이 사라지진 않아요.',
-  '다시 쌓으면 됩니다. 이미 방법은 알고 있잖아요.',
-  "중요한 건 '계속'이 아니라 '다시'입니다.",
-];
 
 function getDailyRandom(arr, seed) {
   const key = todayKey();
@@ -2027,32 +1928,6 @@ function getDailyRandom(arr, seed) {
   for (let i = 0; i < key.length; i++) hash = ((hash << 5) - hash) + key.charCodeAt(i);
   hash = ((hash << 5) - hash) + seed;
   return arr[Math.abs(hash) % arr.length];
-}
-
-function wasYesterdayFailed() {
-  const list = loadSupplements();
-  if (list.length === 0) return false;
-  const records = loadRecords();
-  const y = new Date();
-  y.setDate(y.getDate() - 1);
-  const yk = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
-  const yRec = records[yk] || [];
-  return !list.every(s => yRec.includes(s.id));
-}
-
-function isStreakBroken() {
-  return wasYesterdayFailed() && calculateStreak() === 0;
-}
-
-const RECOVERY_STATE_KEY = 'recovery_dismissed';
-
-function isRecoveryDismissed() {
-  return localStorage.getItem(RECOVERY_STATE_KEY) === todayKey();
-}
-
-function dismissRecovery() {
-  localStorage.setItem(RECOVERY_STATE_KEY, todayKey());
-  renderToday();
 }
 
 // --- Today ---
@@ -2107,27 +1982,6 @@ function renderToday() {
           <span class="care-icon">💬</span>
           <div class="care-text">${getDailyRandom(CARE_NOT_DONE, 2)}</div>
         </div>`;
-
-      // Recovery button: show if yesterday failed
-      if (wasYesterdayFailed()) {
-        const streakBroken = isStreakBroken();
-        if (isRecoveryDismissed()) {
-          const msg = streakBroken ? getDailyRandom(RECOVERY_STREAK_MESSAGES, 3) : getDailyRandom(RECOVERY_MESSAGES, 4);
-          html += `
-            <div class="recovery-done">
-              <span class="recovery-done-icon">🤍</span>
-              <div class="recovery-done-text">${msg}</div>
-              <div class="recovery-sub">내일 다시 함께해요</div>
-            </div>`;
-        } else {
-          html += `
-            <div class="recovery-section">
-              <span class="recovery-icon">${streakBroken ? '🔥' : '🌿'}</span>
-              <div class="recovery-text">${streakBroken ? '스트릭이 끊겼지만, 다시 시작할 수 있어요.' : '어제 놓친 건 괜찮아요.'}</div>
-              <button class="recovery-btn" onclick="dismissRecovery()">${getDailyRandom(RECOVERY_BTN_TEXTS, 5)}</button>
-            </div>`;
-        }
-      }
     }
   } else if (allDone) {
     html += `
@@ -2193,12 +2047,17 @@ function toggleCheck(id, event) {
   } else {
     records[key].splice(idx, 1);
     supp.stock++;
+    // Remove check time record
+    const ct = loadCheckTimes();
+    delete ct[`${key}_${id}`];
+    saveCheckTimes(ct);
   }
 
   saveRecords(records);
   saveSupplements(list);
   renderToday();
   if (isChecking) checkBadges();
+  else recheckBadges();
 }
 
 function switchToManage() {
@@ -2252,6 +2111,7 @@ document.querySelectorAll('.period-btn').forEach(btn => {
 });
 
 function renderStats() {
+  recheckBadges();
   const list = loadSupplements();
   const records = loadRecords();
   const days = statDays;
@@ -2862,6 +2722,25 @@ function checkBadges() {
     saveBadges(earned);
     newBadges.forEach(b => badgePopupQueue.push(b));
     if (!badgePopupShowing) showNextBadgePopup();
+  }
+}
+
+function recheckBadges() {
+  const earned = loadBadges();
+  let changed = false;
+  BADGES.forEach(b => {
+    if (earned[b.id]) {
+      try {
+        if (!b.check()) {
+          delete earned[b.id];
+          changed = true;
+        }
+      } catch(e) {}
+    }
+  });
+  if (changed) {
+    saveBadges(earned);
+    renderBadges();
   }
 }
 
