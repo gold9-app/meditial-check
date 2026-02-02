@@ -219,6 +219,48 @@ body {
   font-weight: 700;
 }
 
+/* Month Track */
+.month-track {
+  margin-top: 16px;
+  position: relative;
+}
+.month-track-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.month-track-bar {
+  position: relative;
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: visible;
+}
+.month-track-fill {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.9));
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+.month-track-runner {
+  position: absolute;
+  top: -14px;
+  font-size: 1.1rem;
+  transform: translateX(-50%);
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: runBounce 0.45s ease-in-out infinite;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  left: 0%;
+}
+@keyframes runBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
 /* Bottom Navigation */
 .bottom-nav {
   position: fixed;
@@ -1560,6 +1602,7 @@ body {
       <div class="header-progress" id="headerProgress"></div>
       <span id="streakBadge"></span>
     </div>
+    <div id="monthTrack"></div>
   </header>
 
   <div class="notif-banner" id="notifBanner" onclick="requestNotifPermission()">
@@ -1811,6 +1854,9 @@ function changeSelectedDate(delta) {
   today.setHours(0,0,0,0);
   next.setHours(0,0,0,0);
   if (next > today) return;
+  const limit = new Date(today);
+  limit.setDate(limit.getDate() - 2);
+  if (next < limit) return;
   selectedDate = next;
   renderDateNav();
   renderToday();
@@ -1840,10 +1886,16 @@ function renderDateNav() {
   today.setHours(0,0,0,0);
   tomorrow.setHours(0,0,0,0);
   const isFutureDisabled = tomorrow > today;
+  const prevDay = new Date(selectedDate);
+  prevDay.setDate(prevDay.getDate() - 1);
+  prevDay.setHours(0,0,0,0);
+  const limit = new Date(today);
+  limit.setDate(limit.getDate() - 2);
+  const isPastDisabled = prevDay < limit;
 
   container.innerHTML = `
     <div class="date-nav">
-      <button class="date-nav-btn" onclick="changeSelectedDate(-1)">◀</button>
+      <button class="date-nav-btn" onclick="changeSelectedDate(-1)" ${isPastDisabled ? 'disabled' : ''}>◀</button>
       <span class="date-nav-label">${formatDate(selectedDate)}</span>
       <button class="date-nav-btn" onclick="changeSelectedDate(1)" ${isFutureDisabled ? 'disabled' : ''}>▶</button>
       ${!isTodaySelected ? '<button class="go-today-btn" onclick="goToToday()">오늘로</button>' : ''}
@@ -1895,6 +1947,47 @@ function renderHeaderProgress() {
     <div class="progress-detail">
       <strong>${taken}/${total}</strong> 복용 완료<br>
       ${taken === total ? '오늘 완벽해요!' : `${total - taken}개 남았어요`}
+    </div>
+  `;
+}
+
+// --- Month Track (Running Progress) ---
+function renderMonthTrack() {
+  const container = document.getElementById('monthTrack');
+  const list = loadSupplements();
+  if (list.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  const now = new Date();
+  const records = loadRecords();
+  const TRACK_DAYS = 30;
+
+  let completeDays = 0;
+  for (let i = TRACK_DAYS - 1; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const dayRec = records[key] || [];
+    if (list.every(s => dayRec.includes(s.id))) {
+      completeDays++;
+    }
+  }
+
+  const fillPct = Math.round(completeDays / TRACK_DAYS * 100);
+  const runnerPct = fillPct;
+
+  container.innerHTML = `
+    <div class="month-track">
+      <div class="month-track-labels">
+        <span>0일</span>
+        <span>30일</span>
+      </div>
+      <div class="month-track-bar">
+        <div class="month-track-fill" style="width:${fillPct}%"></div>
+        <div class="month-track-runner" style="left:${runnerPct}%">🏃</div>
+      </div>
     </div>
   `;
 }
@@ -2010,6 +2103,7 @@ function renderToday() {
   const list = loadSupplements();
   const container = document.getElementById('todayList');
   renderHeaderProgress();
+  renderMonthTrack();
   renderStreak();
   renderDateNav();
 
@@ -2351,7 +2445,15 @@ function deleteSupplement(id) {
   if (!confirm('정말 삭제하시겠습니까?')) return;
   const list = loadSupplements().filter(s => s.id !== id);
   saveSupplements(list);
+  // Remove deleted supplement from all records
+  const records = loadRecords();
+  Object.keys(records).forEach(key => {
+    records[key] = records[key].filter(rid => rid !== id);
+  });
+  saveRecords(records);
   renderManage();
+  renderToday();
+  recheckBadges();
 }
 
 // --- Modal ---
