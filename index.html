@@ -219,48 +219,6 @@ body {
   font-weight: 700;
 }
 
-/* Month Track */
-.month-track {
-  margin-top: 16px;
-  position: relative;
-}
-.month-track-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.7rem;
-  color: rgba(255,255,255,0.6);
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-.month-track-bar {
-  position: relative;
-  height: 8px;
-  background: rgba(255,255,255,0.2);
-  border-radius: 4px;
-  overflow: visible;
-}
-.month-track-fill {
-  height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.9));
-  border-radius: 4px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  width: 0%;
-}
-.month-track-runner {
-  position: absolute;
-  top: -14px;
-  font-size: 1.1rem;
-  transform: translateX(-50%);
-  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: runBounce 0.45s ease-in-out infinite;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-  left: 0%;
-}
-@keyframes runBounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-4px); }
-}
-
 /* Bottom Navigation */
 .bottom-nav {
   position: fixed;
@@ -1580,6 +1538,71 @@ body {
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 }
 
+.savings-track {
+  margin-top: 16px;
+  position: relative;
+}
+.savings-track-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.savings-track-amount {
+  color: rgba(255,255,255,0.95);
+  font-weight: 700;
+}
+.savings-track-bar {
+  position: relative;
+  height: 8px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+  overflow: visible;
+}
+.savings-track-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 4px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+.savings-track-runner {
+  position: absolute;
+  top: -14px;
+  font-size: 1.1rem;
+  transform: translateX(-50%);
+  transition: left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: piggyBounce 0.45s ease-in-out infinite;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  left: 0%;
+}
+@keyframes piggyBounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+.calendar-savings-summary {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 10px;
+  background: var(--bg-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+}
+.calendar-savings-summary span {
+  color: #f59e0b;
+  font-weight: 700;
+}
+.calendar-day.level-4 .day-savings {
+  font-size: 0.55rem;
+  line-height: 1;
+  display: block;
+}
+
 /* Responsive */
 @media (min-width: 480px) {
   body { padding: 0; }
@@ -1602,7 +1625,7 @@ body {
       <div class="header-progress" id="headerProgress"></div>
       <span id="streakBadge"></span>
     </div>
-    <div id="monthTrack"></div>
+    <div id="savingsTrack"></div>
   </header>
 
   <div class="notif-banner" id="notifBanner" onclick="requestNotifPermission()">
@@ -1951,42 +1974,42 @@ function renderHeaderProgress() {
   `;
 }
 
-// --- Month Track (Running Progress) ---
-function renderMonthTrack() {
-  const container = document.getElementById('monthTrack');
+// --- Savings Calc & Track (Piggy Bank Runner) ---
+function calcSavings() {
+  const list = loadSupplements();
+  if (list.length === 0) return 0;
+  const now = new Date();
+  const records = loadRecords();
+  let perfectDays = 0;
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const dayRec = records[key] || [];
+    if (list.every(s => dayRec.includes(s.id))) perfectDays++;
+  }
+  return perfectDays * 167;
+}
+
+function renderSavingsTrack() {
+  const container = document.getElementById('savingsTrack');
   const list = loadSupplements();
   if (list.length === 0) {
     container.innerHTML = '';
     return;
   }
-
-  const now = new Date();
-  const records = loadRecords();
-  const TRACK_DAYS = 30;
-
-  let completeDays = 0;
-  for (let i = TRACK_DAYS - 1; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    const dayRec = records[key] || [];
-    if (list.every(s => dayRec.includes(s.id))) {
-      completeDays++;
-    }
-  }
-
-  const fillPct = Math.round(completeDays / TRACK_DAYS * 100);
-  const runnerPct = fillPct;
-
+  const savings = calcSavings();
+  const goal = 5000;
+  const pct = Math.min(Math.round(savings / goal * 100), 100);
   container.innerHTML = `
-    <div class="month-track">
-      <div class="month-track-labels">
-        <span>0일</span>
-        <span>30일</span>
+    <div class="savings-track">
+      <div class="savings-track-labels">
+        <span class="savings-track-amount">🐷 ${savings.toLocaleString()}원</span>
+        <span>${goal.toLocaleString()}원</span>
       </div>
-      <div class="month-track-bar">
-        <div class="month-track-fill" style="width:${fillPct}%"></div>
-        <div class="month-track-runner" style="left:${runnerPct}%">🏃</div>
+      <div class="savings-track-bar">
+        <div class="savings-track-fill" style="width:${pct}%"></div>
+        <div class="savings-track-runner" style="left:${pct}%">🐷</div>
       </div>
     </div>
   `;
@@ -2103,7 +2126,7 @@ function renderToday() {
   const list = loadSupplements();
   const container = document.getElementById('todayList');
   renderHeaderProgress();
-  renderMonthTrack();
+  renderSavingsTrack();
   renderStreak();
   renderDateNav();
 
@@ -2687,7 +2710,8 @@ function renderCalendar() {
     else if (rate >= 0.5 && rate < 1) level = 3;
     else if (rate >= 1) level = 4;
 
-    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용" style="cursor:pointer" onclick="openDateCheck('${dateKey}')">${d}</div>`;
+    const perfIcon = level === 4 ? '<span class="day-savings">💰</span>' : '';
+    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용" style="cursor:pointer" onclick="openDateCheck('${dateKey}')">${d}${perfIcon}</div>`;
   }
 
   html += '</div>';
@@ -2701,6 +2725,17 @@ function renderCalendar() {
     <div class="calendar-legend-box" style="background:#1d4ed8"></div>
     <span>완벽</span>
   </div>`;
+
+  // Monthly savings summary
+  let monthPerfect = 0;
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dk = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    if (new Date(year, month, d) > today) continue;
+    const dr = records[dk] || [];
+    if (list.every(s => dr.includes(s.id))) monthPerfect++;
+  }
+  const monthSavings = monthPerfect * 167;
+  html += `<div class="calendar-savings-summary">💰 이번 달 적립금: <span>${monthSavings.toLocaleString()}원</span> (완벽 ${monthPerfect}일 × 167원)</div>`;
 
   container.innerHTML = html;
 }
