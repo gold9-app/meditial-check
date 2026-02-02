@@ -140,13 +140,13 @@ body {
   font-weight: 400;
 }
 
-/* Header right area */
-.header-right {
+/* Header bottom row */
+.header-bottom {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
+  justify-content: space-between;
+  margin-top: 16px;
+  position: relative;
 }
 
 /* Dark mode toggle */
@@ -177,7 +177,7 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-top: 18px;
+  flex: 1;
   position: relative;
 }
 .progress-ring-wrap {
@@ -1199,14 +1199,14 @@ body {
         <h1>MEDITIAL</h1>
         <div class="date" id="headerDate"></div>
       </div>
-      <div class="header-right">
-        <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" aria-label="다크모드 전환">
-          <span id="darkIcon">🌙</span>
-        </button>
-        <span id="streakBadge"></span>
-      </div>
+      <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" aria-label="다크모드 전환">
+        <span id="darkIcon">🌙</span>
+      </button>
     </div>
-    <div class="header-progress" id="headerProgress"></div>
+    <div class="header-bottom">
+      <div class="header-progress" id="headerProgress"></div>
+      <span id="streakBadge"></span>
+    </div>
   </header>
 
   <div class="notif-banner" id="notifBanner" onclick="requestNotifPermission()">
