@@ -1190,6 +1190,8 @@ body {
     <div class="header-progress" id="headerProgress"></div>
   </header>
 
+  <div id="streakBadge" style="text-align:center;padding:12px 16px 0;"></div>
+
   <div class="notif-banner" id="notifBanner" onclick="requestNotifPermission()">
     알림을 허용하면 복용 시간에 알려드려요. 여기를 클릭하세요.
   </div>
@@ -1235,7 +1237,6 @@ body {
   </div>
 
   <div class="tab-content" id="stats">
-    <div id="streakBadge"></div>
     <div id="todayDonut"></div>
     <div class="stat-period">
       <button class="period-btn active" data-days="7">최근 7일</button>
@@ -1402,6 +1403,14 @@ function formatDate(d) {
 // --- Header ---
 document.getElementById('headerDate').textContent = formatDate(new Date());
 
+// --- Streak Badge ---
+function renderStreak() {
+  const streak = calculateStreak();
+  document.getElementById('streakBadge').innerHTML = streak > 0
+    ? `<div class="streak-badge"><span class="streak-fire">🔥</span> ${streak}일 연속 복용 중!</div>`
+    : '';
+}
+
 // --- Header Progress Ring ---
 function renderHeaderProgress() {
   const list = loadSupplements();
@@ -1504,6 +1513,7 @@ function renderToday() {
   const list = loadSupplements();
   const container = document.getElementById('todayList');
   renderHeaderProgress();
+  renderStreak();
 
   if (list.length === 0) {
     container.innerHTML = `
@@ -1659,11 +1669,7 @@ function renderStats() {
   const records = loadRecords();
   const days = statDays;
 
-  // Streak
-  const streak = calculateStreak();
-  document.getElementById('streakBadge').innerHTML = streak > 0
-    ? `<div class="streak-badge"><span class="streak-fire">🔥</span> ${streak}일 연속 복용 중!</div>`
-    : '';
+  renderStreak();
 
   // Today donut
   if (list.length > 0) {
