@@ -360,6 +360,112 @@ body {
   color: var(--text-secondary);
 }
 
+/* Care Message */
+.care-message {
+  text-align: center;
+  padding: 18px 20px;
+  background: var(--bg-secondary);
+  border-radius: 14px;
+  margin-bottom: 18px;
+  border: 1px solid var(--border-light);
+  animation: fadeInUp 0.6s ease both;
+}
+.care-message.done {
+  background: linear-gradient(135deg, var(--green-bg), #dcfce7);
+  border-color: var(--green-border);
+}
+[data-theme="dark"] .care-message.done {
+  background: linear-gradient(135deg, rgba(74,222,128,0.06), rgba(74,222,128,0.12));
+}
+.care-message .care-icon {
+  font-size: 1.4rem;
+  display: block;
+  margin-bottom: 6px;
+}
+.care-message .care-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.care-message.done .care-text {
+  color: var(--green);
+}
+
+/* Recovery Button */
+.recovery-section {
+  text-align: center;
+  padding: 22px 20px;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  border: 1px solid #fed7aa;
+  animation: fadeInUp 0.5s ease both;
+}
+[data-theme="dark"] .recovery-section {
+  background: linear-gradient(135deg, rgba(249,115,22,0.06), rgba(249,115,22,0.12));
+  border-color: rgba(251,146,60,0.3);
+}
+.recovery-section .recovery-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 8px;
+}
+.recovery-section .recovery-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.recovery-btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 24px;
+  border: none;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(249,115,22,0.3);
+}
+.recovery-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(249,115,22,0.4);
+}
+
+/* Recovery done state */
+.recovery-done {
+  text-align: center;
+  padding: 22px 20px;
+  background: linear-gradient(135deg, var(--accent-bg), #dbeafe);
+  border-radius: 16px;
+  margin-bottom: 18px;
+  border: 1px solid var(--accent-border);
+  animation: celebrateIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+[data-theme="dark"] .recovery-done {
+  background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.12));
+}
+.recovery-done .recovery-done-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 8px;
+}
+.recovery-done .recovery-done-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.6;
+}
+.recovery-done .recovery-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
 .time-group {
   margin-bottom: 24px;
   animation: fadeInUp 0.5s ease both;
@@ -1852,6 +1958,103 @@ function vibrate(pattern) {
   }
 }
 
+// --- Care Messages ---
+const CARE_DONE = [
+  '오늘은 이미 충분히 잘하고 있어요.',
+  '오늘의 할 일, 가장 중요한 건 끝났어요.',
+  '몸이 분명히 기억할 거예요.',
+  '작은 습관이 오늘도 지켜졌어요.',
+  '오늘 하루, 나를 챙긴 기록이 하나 남았어요.',
+  '오늘도 스스로와의 약속을 지켰네요.',
+  '이게 쌓이면, 달라집니다.',
+  '오늘의 선택이 내일의 컨디션을 만듭니다.',
+  '쉬워 보이지만, 아무나 못 하는 일.',
+  '계속 가고 있다는 게 중요해요.',
+  '오늘도 애쓰셨죠. 충분해요.',
+  '오늘 하루, 이 정도면 잘한 거예요.',
+  '나를 챙기는 사람은 늘 바쁜 사람입니다.',
+  '완벽하지 않아도, 계속하는 게 멋져요.',
+  '오늘은 스스로에게 점수 주셔도 돼요.',
+  '오늘의 건강 루틴, 깔끔하게 완료.',
+  '메디셜이 함께한 오늘의 기록.',
+  '오늘의 체크 하나가 내일을 바꿉니다.',
+  '건강은 이렇게 쌓입니다.',
+  '오늘도 좋은 선택을 하셨어요.',
+];
+const CARE_NOT_DONE = [
+  '아직 하루는 남아 있어요.',
+  '오늘은 아직 끝나지 않았어요.',
+  '지금 생각났다면, 딱 좋은 타이밍이에요.',
+  '괜찮아요. 천천히 가도 돼요.',
+  '오늘 한 번 더 기회가 있어요.',
+  '바쁜 날엔 누구나 놓칠 수 있어요.',
+  '오늘이 유난히 정신없었죠?',
+  '깜빡해도 괜찮아요.',
+  '건강은 완벽함보다 방향이에요.',
+  '오늘도 애쓴 하루였어요.',
+];
+
+const RECOVERY_BTN_TEXTS = [
+  '오늘은 괜찮아요',
+  '오늘은 여기까지',
+  '내일 다시 할게요',
+  '오늘은 쉬어도 돼요',
+  '다음 한 번이 더 중요해요',
+];
+const RECOVERY_MESSAGES = [
+  '하루 빠졌다고, 그동안의 노력이 사라지진 않아요.',
+  '건강은 연속이 아니라 방향입니다.',
+  '오늘은 쉬고, 내일 다시 이어가면 돼요.',
+  '여기까지 온 것도 충분히 잘한 거예요.',
+  '멈춘 게 아니라, 잠깐 숨 고른 거예요.',
+  '내일 첫 체크부터 다시 시작해요.',
+  '다음 체크가 진짜 중요한 순간이에요.',
+  '다시 시작하기에 딱 좋은 타이밍이에요.',
+  '오늘의 실패는 내일의 이유가 됩니다.',
+  '다시 돌아오면, 메디셜은 항상 여기 있어요.',
+];
+const RECOVERY_STREAK_MESSAGES = [
+  '스트릭은 끊겼지만, 습관은 남아 있어요.',
+  '숫자는 초기화됐지만, 의미는 그대로예요.',
+  '한 번 쉬었다고, 길이 사라지진 않아요.',
+  '다시 쌓으면 됩니다. 이미 방법은 알고 있잖아요.',
+  "중요한 건 '계속'이 아니라 '다시'입니다.",
+];
+
+function getDailyRandom(arr, seed) {
+  const key = todayKey();
+  let hash = 0;
+  for (let i = 0; i < key.length; i++) hash = ((hash << 5) - hash) + key.charCodeAt(i);
+  hash = ((hash << 5) - hash) + seed;
+  return arr[Math.abs(hash) % arr.length];
+}
+
+function wasYesterdayFailed() {
+  const list = loadSupplements();
+  if (list.length === 0) return false;
+  const records = loadRecords();
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  const yk = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
+  const yRec = records[yk] || [];
+  return !list.every(s => yRec.includes(s.id));
+}
+
+function isStreakBroken() {
+  return wasYesterdayFailed() && calculateStreak() === 0;
+}
+
+const RECOVERY_STATE_KEY = 'recovery_dismissed';
+
+function isRecoveryDismissed() {
+  return localStorage.getItem(RECOVERY_STATE_KEY) === todayKey();
+}
+
+function dismissRecovery() {
+  localStorage.setItem(RECOVERY_STATE_KEY, todayKey());
+  renderToday();
+}
+
 // --- Today ---
 function renderToday() {
   const list = loadSupplements();
@@ -1889,12 +2092,49 @@ function renderToday() {
   const sortedTimes = Object.keys(groups).sort();
   let html = '';
 
-  if (allDone) {
+  // Care message + Recovery (only on real today)
+  if (isSelectedToday()) {
+    if (allDone) {
+      html += `
+        <div class="completion-banner">
+          <span class="celebrate-icon">🎉</span>
+          <div class="celebrate-title">오늘 영양제 완료!</div>
+          <div class="celebrate-desc">${getDailyRandom(CARE_DONE, 1)}</div>
+        </div>`;
+    } else {
+      html += `
+        <div class="care-message">
+          <span class="care-icon">💬</span>
+          <div class="care-text">${getDailyRandom(CARE_NOT_DONE, 2)}</div>
+        </div>`;
+
+      // Recovery button: show if yesterday failed
+      if (wasYesterdayFailed()) {
+        const streakBroken = isStreakBroken();
+        if (isRecoveryDismissed()) {
+          const msg = streakBroken ? getDailyRandom(RECOVERY_STREAK_MESSAGES, 3) : getDailyRandom(RECOVERY_MESSAGES, 4);
+          html += `
+            <div class="recovery-done">
+              <span class="recovery-done-icon">🤍</span>
+              <div class="recovery-done-text">${msg}</div>
+              <div class="recovery-sub">내일 다시 함께해요</div>
+            </div>`;
+        } else {
+          html += `
+            <div class="recovery-section">
+              <span class="recovery-icon">${streakBroken ? '🔥' : '🌿'}</span>
+              <div class="recovery-text">${streakBroken ? '스트릭이 끊겼지만, 다시 시작할 수 있어요.' : '어제 놓친 건 괜찮아요.'}</div>
+              <button class="recovery-btn" onclick="dismissRecovery()">${getDailyRandom(RECOVERY_BTN_TEXTS, 5)}</button>
+            </div>`;
+        }
+      }
+    }
+  } else if (allDone) {
     html += `
       <div class="completion-banner">
         <span class="celebrate-icon">🎉</span>
-        <div class="celebrate-title">오늘 영양제 완료!</div>
-        <div class="celebrate-desc">오늘도 건강에 한걸음 나아가셨네요!</div>
+        <div class="celebrate-title">이 날 영양제 완료!</div>
+        <div class="celebrate-desc">모든 영양제를 복용했어요!</div>
       </div>`;
   }
 
