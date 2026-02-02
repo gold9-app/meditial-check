@@ -1346,9 +1346,37 @@ function checkAlarms() {
   });
 }
 
+// --- 저녁 9시 미복용 알림 ---
+function checkEveningReminder() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const now = new Date();
+  if (now.getHours() !== 21) return;
+
+  const list = loadSupplements();
+  if (list.length === 0) return;
+
+  const records = loadRecords();
+  const key = todayKey();
+  const todayRec = records[key] || [];
+  const missed = list.filter(s => !todayRec.includes(s.id));
+
+  if (missed.length === 0) return;
+
+  const notifKey = `notif_evening_${key}`;
+  if (sessionStorage.getItem(notifKey)) return;
+
+  const names = missed.map(s => s.name).join(', ');
+  new Notification('미복용 영양제 알림', {
+    body: `아직 안 드신 영양제가 ${missed.length}개 있어요!\n${names}`,
+    icon: 'icon.png'
+  });
+  sessionStorage.setItem(notifKey, '1');
+}
+
 // Check alarms every 30 seconds
-setInterval(checkAlarms, 30000);
+setInterval(() => { checkAlarms(); checkEveningReminder(); }, 30000);
 checkAlarms();
+checkEveningReminder();
 
 // --- Escape HTML ---
 function esc(str) {
