@@ -817,40 +817,6 @@ body {
   gap: 10px;
   margin-top: 10px;
 }
-.stock-adjust {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.stock-adjust button {
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  border: 1.5px solid var(--border);
-  background: var(--bg-primary);
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  color: var(--text-secondary);
-  font-family: 'Inter', sans-serif;
-}
-.stock-adjust button:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
-  transform: scale(1.05);
-}
-.stock-adjust span {
-  font-size: 0.88rem;
-  font-weight: 700;
-  min-width: 44px;
-  text-align: center;
-  color: var(--text-primary);
-}
 
 /* Modal */
 .modal-overlay {
@@ -1828,27 +1794,13 @@ function renderManage() {
         <div class="detail-row">${esc(s.time)} · ${esc(s.dose)}</div>
         <div class="stock-row">
           <span style="font-size:0.82rem;color:var(--text-muted)">재고:</span>
-          <div class="stock-adjust">
-            <button onclick="adjustStock('${s.id}', -10)">-10</button>
-            <button onclick="adjustStock('${s.id}', -1)">-</button>
-            <span style="color:${lowStock ? 'var(--red)' : clr.text}">${s.stock}일분</span>
-            <button onclick="adjustStock('${s.id}', 1)">+</button>
-            <button onclick="adjustStock('${s.id}', 10)">+10</button>
-          </div>
+          <span style="font-size:0.88rem;font-weight:700;color:${lowStock ? 'var(--red)' : clr.text}">${s.stock}일분</span>
         </div>
       </div>`;
   });
   container.innerHTML = html;
 }
 
-function adjustStock(id, delta) {
-  const list = loadSupplements();
-  const s = list.find(x => x.id === id);
-  if (!s) return;
-  s.stock = Math.max(0, s.stock + delta);
-  saveSupplements(list);
-  renderManage();
-}
 
 function deleteSupplement(id) {
   if (!confirm('정말 삭제하시겠습니까?')) return;
