@@ -786,6 +786,75 @@ body {
   border-color: #2563eb;
 }
 
+/* Guide */
+.guide-section {
+  margin-top: 24px;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+.guide-toggle {
+  width: 100%;
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+.guide-toggle .arrow {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  transition: transform 0.3s;
+}
+.guide-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+.guide-body {
+  display: none;
+  padding: 0 18px 18px;
+}
+.guide-body.open {
+  display: block;
+  animation: tabFadeIn 0.3s ease;
+}
+.guide-step {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: flex-start;
+}
+.guide-step:last-child {
+  margin-bottom: 0;
+}
+.guide-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.guide-text {
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.6;
+}
+.guide-text strong {
+  color: #1e293b;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -842,6 +911,34 @@ body {
       <button class="backup-btn" onclick="exportData()">📥 데이터 백업</button>
       <button class="backup-btn restore" onclick="document.getElementById('importFile').click()">📤 데이터 복원</button>
       <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+    <div class="guide-section">
+      <button class="guide-toggle" onclick="toggleGuide(this)">
+        <span>📖 사용법 안내</span>
+        <span class="arrow">▼</span>
+      </button>
+      <div class="guide-body" id="guideBody">
+        <div class="guide-step">
+          <div class="guide-num">1</div>
+          <div class="guide-text">위의 <strong>+ 영양제 추가</strong> 버튼을 눌러<br>내가 먹는 영양제를 등록해요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">2</div>
+          <div class="guide-text"><strong>오늘</strong> 탭에서 영양제를 먹을 때마다<br>동그란 버튼을 눌러 체크해요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">3</div>
+          <div class="guide-text"><strong>통계</strong> 탭에서 내 복용 기록과<br>캘린더를 한눈에 확인할 수 있어요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">4</div>
+          <div class="guide-text">재고가 줄어들면 <strong>빨간색</strong>으로 표시돼요.<br>여기서 재고 수량을 조절할 수 있어요.</div>
+        </div>
+        <div class="guide-step">
+          <div class="guide-num">5</div>
+          <div class="guide-text"><strong>데이터 백업</strong>을 누르면 기록을 저장하고,<br><strong>데이터 복원</strong>으로 다시 불러올 수 있어요.</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1257,6 +1354,12 @@ function esc(str) {
   const d = document.createElement('div');
   d.textContent = str;
   return d.innerHTML;
+}
+
+// --- Guide Toggle ---
+function toggleGuide(btn) {
+  btn.classList.toggle('open');
+  document.getElementById('guideBody').classList.toggle('open');
 }
 
 // --- Backup / Restore ---
