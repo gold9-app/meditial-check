@@ -669,15 +669,6 @@ body {
   background: #eff6ff;
   transform: translateY(-1px);
 }
-.backup-btn.restore {
-  border-color: #d1d5db;
-}
-.backup-btn.restore:hover {
-  border-color: #22c55e;
-  color: #16a34a;
-  background: #f0fdf4;
-}
-
 /* Calendar Heatmap */
 .calendar-section {
   margin-top: 28px;
@@ -910,8 +901,6 @@ body {
     <div id="manageList"></div>
     <div class="backup-section">
       <button class="backup-btn" onclick="exportData()">📥 데이터 백업</button>
-      <button class="backup-btn restore" onclick="document.getElementById('importFile').click()">📤 데이터 복원</button>
-      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
     </div>
     <div class="guide-section">
       <button class="guide-toggle" onclick="toggleGuide(this)">
@@ -1407,31 +1396,6 @@ function exportData() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.supplements || !data.records) {
-        alert('올바른 백업 파일이 아닙니다.');
-        return;
-      }
-      if (!confirm(`백업 데이터를 복원하시겠습니까?\n(${data.exportDate ? new Date(data.exportDate).toLocaleDateString('ko-KR') + ' 백업' : '백업 날짜 불명'})\n\n⚠️ 현재 데이터가 덮어씌워집니다.`)) return;
-      saveSupplements(data.supplements);
-      saveRecords(data.records);
-      alert('데이터가 복원되었습니다!');
-      renderToday();
-      renderManage();
-    } catch (err) {
-      alert('파일을 읽을 수 없습니다. 올바른 JSON 파일인지 확인하세요.');
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
 }
 
 // --- Calendar Heatmap ---
