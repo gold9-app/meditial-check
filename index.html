@@ -3142,7 +3142,7 @@ function renderBadges() {
         <div class="badge-card ${isUnlocked ? 'unlocked' : 'locked'}" onclick="openBadgeDetail('${b.id}')" style="cursor:pointer">
           <span class="badge-icon">${b.icon}</span>
           <div class="badge-name">${esc(b.name)}</div>
-          <div class="badge-desc">${esc(b.desc)}</div>
+          <div class="badge-desc">${isUnlocked ? esc(b.desc) : '???'}</div>
           ${isUnlocked ? `<div class="badge-date">${earned[b.id]}</div>` : ''}
         </div>`;
     });
@@ -3162,7 +3162,7 @@ function openBadgeDetail(badgeId) {
 
   document.getElementById('badgeDetailIcon').textContent = badge.icon;
   document.getElementById('badgeDetailName').textContent = badge.name;
-  document.getElementById('badgeDetailDesc').textContent = badge.desc;
+  document.getElementById('badgeDetailDesc').textContent = isUnlocked ? badge.desc : '???';
 
   const content = document.getElementById('badgeDetailContent');
   content.className = 'badge-detail-content' + (isUnlocked ? ' unlocked' : '');
