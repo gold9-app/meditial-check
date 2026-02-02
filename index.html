@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEDITIAL 영양제 체크</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="영양제체크">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232563eb' width='100' height='100' rx='20'/><text y='.9em' x='10' font-size='80'>💊</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #eef2ff;
+  color: #1e293b;
+  min-height: 100vh;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #fff;
+  box-shadow: 0 0 40px rgba(30, 64, 175, 0.08);
+  animation: appFadeIn 0.6s ease;
+}
+@keyframes appFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+  color: #fff;
+  padding: 28px 20px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.1) 0%, transparent 60%);
+  animation: headerShimmer 8s ease-in-out infinite alternate;
+}
+@keyframes headerShimmer {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(10%, 5%); }
+}
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  position: relative;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header .date {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  margin-top: 6px;
+  position: relative;
+  font-weight: 400;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+.tab {
+  flex: 1;
+  padding: 15px 0;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border: none;
+  background: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.tab:hover { color: #64748b; }
+.tab.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+}
+
+/* Tab content */
+.tab-content {
+  display: none;
+  padding: 20px 16px;
+  animation: tabFadeIn 0.4s ease;
+}
+.tab-content.active { display: block; }
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Today tab */
+.today-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #94a3b8;
+  animation: fadeInUp 0.5s ease;
+}
+.today-empty p { margin-bottom: 16px; font-size: 0.95rem; }
+
+.time-group {
+  margin-bottom: 24px;
+  animation: fadeInUp 0.5s ease both;
+}
+.time-group:nth-child(2) { animation-delay: 0.1s; }
+.time-group:nth-child(3) { animation-delay: 0.2s; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.time-group-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-left: 4px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.time-group-label::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #2563eb;
+  display: inline-block;
+}
+
+.supp-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 14px;
+  border: 1px solid #f1f5f9;
+}
+.supp-card:hover {
+  background: #f1f5f9;
+  transform: translateX(4px);
+}
+.supp-card.checked {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+.supp-card.checked:hover { background: #dcfce7; }
+.supp-card .check-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2.5px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  color: transparent;
+}
+.supp-card .check-btn:hover {
+  border-color: #22c55e;
+  transform: scale(1.1);
+}
+.supp-card.checked .check-btn {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #fff;
+  animation: checkPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes checkPop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.supp-card .info { flex: 1; }
+.supp-card .name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #1e293b;
+  transition: all 0.3s;
+}
+.supp-card.checked .name {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+.supp-card .detail {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 3px;
+}
+.supp-card .stock-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #e0e7ff;
+  color: #3b82f6;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.supp-card .stock-badge.low {
+  background: #fef2f2;
+  color: #dc2626;
+  animation: lowPulse 2s ease-in-out infinite;
+}
+@keyframes lowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Stats tab */
+.stat-period {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.period-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.period-btn:hover { border-color: #93c5fd; color: #2563eb; }
+.period-btn.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.stat-summary {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.stat-box {
+  flex: 1;
+  text-align: center;
+  padding: 18px 8px;
+  background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s;
+  animation: fadeInUp 0.5s ease both;
+}
+.stat-box:nth-child(1) { animation-delay: 0s; }
+.stat-box:nth-child(2) { animation-delay: 0.1s; }
+.stat-box:nth-child(3) { animation-delay: 0.2s; }
+.stat-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+.stat-box .value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-box .label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #94a3b8;
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+
+.chart-section h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+.chart-bar-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
+  animation: fadeInUp 0.5s ease both;
+}
+.chart-bar-row:nth-child(1) { animation-delay: 0s; }
+.chart-bar-row:nth-child(2) { animation-delay: 0.08s; }
+.chart-bar-row:nth-child(3) { animation-delay: 0.16s; }
+.chart-bar-row:nth-child(4) { animation-delay: 0.24s; }
+.chart-bar-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #64748b;
+  width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+  word-break: keep-all;
+}
+.chart-bar-track {
+  flex: 1;
+  height: 24px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.chart-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #2563eb, #1d4ed8);
+  border-radius: 12px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 0;
+  position: relative;
+}
+.chart-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+}
+.chart-bar-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2563eb;
+  width: 40px;
+  flex-shrink: 0;
+}
+
+/* Manage tab */
+.add-btn {
+  width: 100%;
+  padding: 16px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 14px;
+  background: #fafbfc;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.add-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+  transform: translateY(-2px);
+}
+
+.manage-card {
+  background: #f8fafc;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.4s ease both;
+}
+.manage-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
+}
+.manage-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.manage-card-header .name { font-weight: 700; font-size: 0.95rem; color: #1e293b; }
+.manage-card-actions {
+  display: flex;
+  gap: 6px;
+}
+.manage-card-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 6px;
+  color: #94a3b8;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.manage-card-actions button:hover { color: #2563eb; background: #eff6ff; }
+.manage-card-actions .delete-btn:hover { color: #dc2626; background: #fef2f2; }
+.manage-card .detail-row {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+.manage-card .stock-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.stock-adjust {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.stock-adjust button {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: #64748b;
+}
+.stock-adjust button:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+  transform: scale(1.05);
+}
+.stock-adjust span {
+  font-size: 0.88rem;
+  font-weight: 700;
+  min-width: 44px;
+  text-align: center;
+  color: #1e293b;
+}
+
+/* Modal */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  justify-content: center;
+  align-items: flex-end;
+}
+.modal-overlay.active {
+  display: flex;
+  animation: overlayFadeIn 0.3s ease;
+}
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.modal {
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  padding: 28px 24px 32px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.modal::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.modal h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #1e293b;
+}
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #f8fafc;
+  color: #1e293b;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: #2563eb;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+.form-actions button {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.btn-cancel:hover { background: #e2e8f0; }
+.btn-save {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+.btn-save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+/* Notification permission banner */
+.notif-banner {
+  display: none;
+  background: linear-gradient(90deg, #fef3c7, #fde68a);
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #92400e;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.notif-banner:hover { background: linear-gradient(90deg, #fde68a, #fcd34d); }
+
+/* CTA button */
+.cta-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 18px 24px;
+  margin-top: 28px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 60%, #1e40af 100%);
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 16px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35), 0 2px 4px rgba(0,0,0,0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: ctaPulse 3s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(37, 99, 235, 0.35); }
+  50% { box-shadow: 0 4px 28px rgba(37, 99, 235, 0.5); }
+}
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: ctaShine 3s ease-in-out infinite;
+}
+@keyframes ctaShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+.cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5), 0 4px 8px rgba(0,0,0,0.1);
+}
+.cta-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.35);
+}
+.cta-btn .cta-label {
+  font-size: 1.05rem;
+  font-weight: 700;
+  position: relative;
+}
+.cta-btn .cta-click {
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 1.5px;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+
+/* Backup/Restore */
+.backup-section {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.backup-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #64748b;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.backup-btn:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: #eff6ff;
+  transform: translateY(-1px);
+}
+.backup-btn.restore {
+  border-color: #d1d5db;
+}
+.backup-btn.restore:hover {
+  border-color: #22c55e;
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+/* Calendar Heatmap */
+.calendar-section {
+  margin-top: 28px;
+}
+.calendar-section h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #1e293b;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.calendar-weekday {
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #94a3b8;
+  padding: 4px 0;
+}
+.calendar-day {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #64748b;
+  position: relative;
+  transition: all 0.2s;
+}
+.calendar-day:hover {
+  transform: scale(1.15);
+  z-index: 1;
+}
+.calendar-day.empty {
+  background: transparent;
+}
+.calendar-day.future {
+  background: #f8fafc;
+  color: #cbd5e1;
+}
+.calendar-day.level-0 {
+  background: #f1f5f9;
+}
+.calendar-day.level-1 {
+  background: #dbeafe;
+  color: #1e40af;
+}
+.calendar-day.level-2 {
+  background: #93c5fd;
+  color: #1e3a8a;
+}
+.calendar-day.level-3 {
+  background: #3b82f6;
+  color: #fff;
+}
+.calendar-day.level-4 {
+  background: #1d4ed8;
+  color: #fff;
+}
+.calendar-day.today {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 10px;
+  font-size: 0.68rem;
+  color: #94a3b8;
+}
+.calendar-legend-box {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.calendar-month-label {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.calendar-nav {
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #64748b;
+  padding: 4px 10px;
+  transition: all 0.2s;
+}
+.calendar-nav:hover {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+/* Responsive */
+@media (min-width: 480px) {
+  body { background: linear-gradient(135deg, #eef2ff, #e0e7ff); padding: 0; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>MEDITIAL 영양제 체크</h1>
+    <div class="date" id="headerDate"></div>
+  </header>
+
+  <div class="notif-banner" id="notifBanner" onclick="requestNotifPermission()">
+    🔔 알림을 허용하면 복용 시간에 알려드려요. 여기를 클릭하세요.
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="today">오늘</button>
+    <button class="tab" data-tab="stats">통계</button>
+    <button class="tab" data-tab="manage">관리</button>
+  </nav>
+
+  <div class="tab-content active" id="today">
+    <div id="todayList"></div>
+    <a href="https://meditial.co.kr/" target="_blank" class="cta-btn"><span class="cta-label">다 드셨나요?</span><span class="cta-click">Click!</span></a>
+  </div>
+
+  <div class="tab-content" id="stats">
+    <div class="stat-period">
+      <button class="period-btn active" data-days="7">최근 7일</button>
+      <button class="period-btn" data-days="30">최근 30일</button>
+    </div>
+    <div class="stat-summary" id="statSummary"></div>
+    <div class="chart-section">
+      <h3>영양제별 복용률</h3>
+      <div id="chartBars"></div>
+    </div>
+    <div class="calendar-section">
+      <h3>복용 캘린더</h3>
+      <div id="calendarHeatmap"></div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="manage">
+    <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
+    <div id="manageList"></div>
+    <div class="backup-section">
+      <button class="backup-btn" onclick="exportData()">📥 데이터 백업</button>
+      <button class="backup-btn restore" onclick="document.getElementById('importFile').click()">📤 데이터 복원</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">영양제 추가</h2>
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label>이름</label>
+      <select id="inputName">
+        <option value="">-- 선택하세요 --</option>
+        <option value="블러드싸이클">블러드싸이클</option>
+        <option value="헬리컷">헬리컷</option>
+        <option value="판토오틴">판토오틴</option>
+        <option value="글루타치온">글루타치온</option>
+        <option value="멜라토닌">멜라토닌</option>
+        <option value="혈당컷">혈당컷</option>
+        <option value="활성엽산">활성엽산</option>
+        <option value="상어연골환">상어연골환</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>복용 시간</label>
+      <input type="time" id="inputTime" value="09:00">
+    </div>
+    <div class="form-group">
+      <label>복용량</label>
+      <input type="text" id="inputDose" placeholder="예: 1정">
+    </div>
+    <div class="form-group">
+      <label>재고 수량 (일분)</label>
+      <input type="number" id="inputStock" min="0" value="30">
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveSupplement()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- Supplement Colors ---
+const SUPP_COLORS = {
+  '블러드싸이클': { bg: '#fef2f2', border: '#fca5a5', bar: '#ef4444', text: '#dc2626' },
+  '헬리컷':       { bg: '#f0fdf4', border: '#86efac', bar: '#22c55e', text: '#16a34a' },
+  '판토오틴':     { bg: '#eff6ff', border: '#93c5fd', bar: '#3b82f6', text: '#2563eb' },
+  '글루타치온':   { bg: '#fdf2f8', border: '#f9a8d4', bar: '#ec4899', text: '#db2777' },
+  '멜라토닌':     { bg: '#f5f3ff', border: '#c4b5fd', bar: '#8b5cf6', text: '#7c3aed' },
+  '혈당컷':       { bg: '#f7fee7', border: '#bef264', bar: '#84cc16', text: '#65a30d' },
+  '활성엽산':     { bg: '#f3f0ff', border: '#d8b4fe', bar: '#a78bfa', text: '#8b5cf6' },
+  '상어연골환':   { bg: '#faf5ff', border: '#e9d5ff', bar: '#c084fc', text: '#a855f7' },
+};
+function getSuppColor(name) {
+  return SUPP_COLORS[name] || { bg: '#f8fafc', border: '#e2e8f0', bar: '#94a3b8', text: '#64748b' };
+}
+
+// --- Data ---
+const STORAGE_KEY = 'supp_data';
+const RECORDS_KEY = 'supp_records';
+
+function loadSupplements() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+function saveSupplements(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+function loadRecords() {
+  return JSON.parse(localStorage.getItem(RECORDS_KEY) || '{}');
+}
+function saveRecords(rec) {
+  localStorage.setItem(RECORDS_KEY, JSON.stringify(rec));
+}
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDate(d) {
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+}
+
+// --- Header ---
+document.getElementById('headerDate').textContent = formatDate(new Date());
+
+// --- Tabs ---
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'stats') renderStats();
+    if (tab.dataset.tab === 'manage') renderManage();
+    if (tab.dataset.tab === 'today') renderToday();
+  });
+});
+
+// --- Today ---
+function renderToday() {
+  const list = loadSupplements();
+  const container = document.getElementById('todayList');
+  if (list.length === 0) {
+    container.innerHTML = '<div class="today-empty"><p>등록된 영양제가 없습니다</p><button class="add-btn" onclick="switchToManage()" style="max-width:200px;margin:0 auto">+ 영양제 추가</button></div>';
+    return;
+  }
+
+  const records = loadRecords();
+  const key = todayKey();
+  const todayRec = records[key] || [];
+
+  // group by time
+  const groups = {};
+  list.forEach(s => {
+    const t = s.time || '00:00';
+    if (!groups[t]) groups[t] = [];
+    groups[t].push(s);
+  });
+
+  const sortedTimes = Object.keys(groups).sort();
+  let html = '';
+  sortedTimes.forEach(time => {
+    html += `<div class="time-group">`;
+    html += `<div class="time-group-label">${time}</div>`;
+    groups[time].forEach(s => {
+      const checked = todayRec.includes(s.id);
+      const lowStock = s.stock <= 3;
+      const clr = getSuppColor(s.name);
+      html += `
+        <div class="supp-card ${checked ? 'checked' : ''}" data-id="${s.id}" style="border-left: 4px solid ${clr.bar}; ${!checked ? 'background:' + clr.bg : ''}">
+          <button class="check-btn" onclick="toggleCheck('${s.id}')" style="${!checked ? 'border-color:' + clr.bar : ''}">${checked ? '✓' : ''}</button>
+          <div class="info">
+            <div class="name" style="${!checked ? 'color:' + clr.text : ''}">${esc(s.name)}</div>
+            <div class="detail">${esc(s.dose)}</div>
+          </div>
+          <div class="stock-badge ${lowStock ? 'low' : ''}" style="${!lowStock ? 'background:' + clr.border + '40; color:' + clr.text : ''}">${s.stock}일분</div>
+        </div>`;
+    });
+    html += `</div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleCheck(id) {
+  const records = loadRecords();
+  const key = todayKey();
+  if (!records[key]) records[key] = [];
+
+  const list = loadSupplements();
+  const supp = list.find(s => s.id === id);
+  if (!supp) return;
+
+  const idx = records[key].indexOf(id);
+  if (idx === -1) {
+    records[key].push(id);
+    if (supp.stock > 0) supp.stock--;
+  } else {
+    records[key].splice(idx, 1);
+    supp.stock++;
+  }
+
+  saveRecords(records);
+  saveSupplements(list);
+  renderToday();
+}
+
+function switchToManage() {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('[data-tab="manage"]').classList.add('active');
+  document.getElementById('manage').classList.add('active');
+  renderManage();
+}
+
+// --- Stats ---
+let statDays = 7;
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    statDays = parseInt(btn.dataset.days);
+    renderStats();
+  });
+});
+
+function renderStats() {
+  const list = loadSupplements();
+  const records = loadRecords();
+  const days = statDays;
+
+  if (list.length === 0) {
+    document.getElementById('statSummary').innerHTML = '<div style="text-align:center;color:#aaa;width:100%;padding:20px">영양제를 먼저 등록하세요</div>';
+    document.getElementById('chartBars').innerHTML = '';
+    return;
+  }
+
+  // Compute per-supplement adherence
+  const dateKeys = [];
+  for (let i = 0; i < days; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dateKeys.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+  }
+
+  let totalPossible = 0;
+  let totalTaken = 0;
+  const perSupp = {};
+
+  list.forEach(s => {
+    perSupp[s.id] = { name: s.name, taken: 0, possible: days, color: getSuppColor(s.name) };
+    dateKeys.forEach(dk => {
+      totalPossible++;
+      if (records[dk] && records[dk].includes(s.id)) {
+        totalTaken++;
+        perSupp[s.id].taken++;
+      }
+    });
+  });
+
+  const overallRate = totalPossible > 0 ? Math.round(totalTaken / totalPossible * 100) : 0;
+
+  // Perfect days (all supps taken)
+  let perfectDays = 0;
+  dateKeys.forEach(dk => {
+    const dayRec = records[dk] || [];
+    if (list.every(s => dayRec.includes(s.id))) perfectDays++;
+  });
+
+  document.getElementById('statSummary').innerHTML = `
+    <div class="stat-box"><div class="value">${overallRate}%</div><div class="label">전체 복용률</div></div>
+    <div class="stat-box"><div class="value">${perfectDays}/${days}</div><div class="label">완벽한 날</div></div>
+    <div class="stat-box"><div class="value">${totalTaken}</div><div class="label">총 복용 횟수</div></div>
+  `;
+
+  let barsHtml = '';
+  Object.values(perSupp).forEach(ps => {
+    const rate = Math.round(ps.taken / ps.possible * 100);
+    const clr = ps.color;
+    barsHtml += `
+      <div class="chart-bar-row">
+        <div class="chart-bar-label" style="color:${clr.text}">${esc(ps.name)}</div>
+        <div class="chart-bar-track" style="background:${clr.bg}"><div class="chart-bar-fill" style="width:${rate}%; background:linear-gradient(90deg, ${clr.border}, ${clr.bar})"></div></div>
+        <div class="chart-bar-value" style="color:${clr.text}">${rate}%</div>
+      </div>`;
+  });
+  document.getElementById('chartBars').innerHTML = barsHtml;
+}
+
+// --- Manage ---
+function renderManage() {
+  const list = loadSupplements();
+  const container = document.getElementById('manageList');
+  if (list.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:#aaa;padding:20px">등록된 영양제가 없습니다</div>';
+    return;
+  }
+  let html = '';
+  list.forEach(s => {
+    const lowStock = s.stock <= 3;
+    const clr = getSuppColor(s.name);
+    html += `
+      <div class="manage-card" style="border-left: 4px solid ${clr.bar}; background: ${clr.bg}">
+        <div class="manage-card-header">
+          <span class="name" style="color:${clr.text}">${esc(s.name)}</span>
+          <div class="manage-card-actions">
+            <button onclick="openModal('${s.id}')" title="수정">✏️</button>
+            <button class="delete-btn" onclick="deleteSupplement('${s.id}')" title="삭제">🗑️</button>
+          </div>
+        </div>
+        <div class="detail-row">${esc(s.time)} · ${esc(s.dose)}</div>
+        <div class="stock-row">
+          <span style="font-size:0.82rem;color:#888">재고:</span>
+          <div class="stock-adjust">
+            <button onclick="adjustStock('${s.id}', -10)">-10</button>
+            <button onclick="adjustStock('${s.id}', -1)">-</button>
+            <span style="color:${lowStock ? '#dc2626' : clr.text}">${s.stock}일분</span>
+            <button onclick="adjustStock('${s.id}', 1)">+</button>
+            <button onclick="adjustStock('${s.id}', 10)">+10</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function adjustStock(id, delta) {
+  const list = loadSupplements();
+  const s = list.find(x => x.id === id);
+  if (!s) return;
+  s.stock = Math.max(0, s.stock + delta);
+  saveSupplements(list);
+  renderManage();
+}
+
+function deleteSupplement(id) {
+  if (!confirm('정말 삭제하시겠습니까?')) return;
+  const list = loadSupplements().filter(s => s.id !== id);
+  saveSupplements(list);
+  renderManage();
+}
+
+// --- Modal ---
+function openModal(editId) {
+  const overlay = document.getElementById('modalOverlay');
+  overlay.classList.add('active');
+  if (editId) {
+    const s = loadSupplements().find(x => x.id === editId);
+    if (!s) return;
+    document.getElementById('modalTitle').textContent = '영양제 수정';
+    document.getElementById('editId').value = editId;
+    document.getElementById('inputName').value = s.name;
+    document.getElementById('inputTime').value = s.time;
+    document.getElementById('inputDose').value = s.dose;
+    document.getElementById('inputStock').value = s.stock;
+  } else {
+    document.getElementById('modalTitle').textContent = '영양제 추가';
+    document.getElementById('editId').value = '';
+    document.getElementById('inputName').value = '';
+    document.getElementById('inputTime').value = '09:00';
+    document.getElementById('inputDose').value = '';
+    document.getElementById('inputStock').value = 30;
+  }
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+
+document.getElementById('modalOverlay').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+function saveSupplement() {
+  const name = document.getElementById('inputName').value.trim();
+  const time = document.getElementById('inputTime').value;
+  const dose = document.getElementById('inputDose').value.trim();
+  const stock = parseInt(document.getElementById('inputStock').value) || 0;
+  const editId = document.getElementById('editId').value;
+
+  if (!name) { alert('영양제를 선택하세요'); return; }
+  if (!dose) { alert('복용량을 입력하세요'); return; }
+
+  const list = loadSupplements();
+
+  if (editId) {
+    const s = list.find(x => x.id === editId);
+    if (s) {
+      s.name = name;
+      s.time = time;
+      s.dose = dose;
+      s.stock = stock;
+    }
+  } else {
+    list.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      name, time, dose, stock
+    });
+  }
+
+  saveSupplements(list);
+  closeModal();
+  renderManage();
+  renderToday();
+}
+
+// --- Notifications ---
+function checkNotifPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission === 'default') {
+    document.getElementById('notifBanner').style.display = 'block';
+  }
+}
+
+function requestNotifPermission() {
+  if (!('Notification' in window)) return;
+  Notification.requestPermission().then(p => {
+    document.getElementById('notifBanner').style.display = 'none';
+  });
+}
+
+function checkAlarms() {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const now = new Date();
+  const hm = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const list = loadSupplements();
+  const records = loadRecords();
+  const key = todayKey();
+  const todayRec = records[key] || [];
+
+  list.forEach(s => {
+    if (s.time === hm && !todayRec.includes(s.id)) {
+      const notifKey = `notif_${key}_${s.id}`;
+      if (!sessionStorage.getItem(notifKey)) {
+        new Notification('영양제 알림', {
+          body: `${s.name} (${s.dose}) 복용할 시간이에요!`,
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">💊</text></svg>'
+        });
+        sessionStorage.setItem(notifKey, '1');
+      }
+    }
+  });
+}
+
+// Check alarms every 30 seconds
+setInterval(checkAlarms, 30000);
+checkAlarms();
+
+// --- Escape HTML ---
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// --- Backup / Restore ---
+function exportData() {
+  const data = {
+    supplements: loadSupplements(),
+    records: loadRecords(),
+    exportDate: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `meditial-backup-${todayKey()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.supplements || !data.records) {
+        alert('올바른 백업 파일이 아닙니다.');
+        return;
+      }
+      if (!confirm(`백업 데이터를 복원하시겠습니까?\n(${data.exportDate ? new Date(data.exportDate).toLocaleDateString('ko-KR') + ' 백업' : '백업 날짜 불명'})\n\n⚠️ 현재 데이터가 덮어씌워집니다.`)) return;
+      saveSupplements(data.supplements);
+      saveRecords(data.records);
+      alert('데이터가 복원되었습니다!');
+      renderToday();
+      renderManage();
+    } catch (err) {
+      alert('파일을 읽을 수 없습니다. 올바른 JSON 파일인지 확인하세요.');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// --- Calendar Heatmap ---
+let calendarMonth = new Date().getMonth();
+let calendarYear = new Date().getFullYear();
+
+function renderCalendar() {
+  const list = loadSupplements();
+  const records = loadRecords();
+  const container = document.getElementById('calendarHeatmap');
+
+  if (list.length === 0) {
+    container.innerHTML = '<div style="text-align:center;color:#aaa;padding:20px">영양제를 먼저 등록하세요</div>';
+    return;
+  }
+
+  const totalSupps = list.length;
+  const year = calendarYear;
+  const month = calendarMonth;
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const today = new Date();
+  const todayStr = todayKey();
+
+  const monthNames = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+
+  let html = `<div class="calendar-month-label">
+    <button class="calendar-nav" onclick="changeCalMonth(-1)">◀</button>
+    <span>${year}년 ${monthNames[month]}</span>
+    <button class="calendar-nav" onclick="changeCalMonth(1)">▶</button>
+  </div>`;
+
+  html += '<div class="calendar-grid">';
+  const weekdays = ['일','월','화','수','목','금','토'];
+  weekdays.forEach(d => { html += `<div class="calendar-weekday">${d}</div>`; });
+
+  // Empty cells for days before the first
+  const startDow = firstDay.getDay();
+  for (let i = 0; i < startDow; i++) {
+    html += '<div class="calendar-day empty"></div>';
+  }
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = dateKey === todayStr;
+    const isFuture = new Date(year, month, d) > today;
+
+    if (isFuture) {
+      html += `<div class="calendar-day future">${d}</div>`;
+      continue;
+    }
+
+    const dayRec = records[dateKey] || [];
+    const takenCount = list.filter(s => dayRec.includes(s.id)).length;
+    const rate = totalSupps > 0 ? takenCount / totalSupps : 0;
+
+    let level = 0;
+    if (rate > 0 && rate < 0.25) level = 1;
+    else if (rate >= 0.25 && rate < 0.5) level = 2;
+    else if (rate >= 0.5 && rate < 1) level = 3;
+    else if (rate >= 1) level = 4;
+
+    html += `<div class="calendar-day level-${level} ${isToday ? 'today' : ''}" title="${dateKey}: ${takenCount}/${totalSupps} 복용">${d}</div>`;
+  }
+
+  html += '</div>';
+
+  // Legend
+  html += `<div class="calendar-legend">
+    <span>부족</span>
+    <div class="calendar-legend-box" style="background:#f1f5f9"></div>
+    <div class="calendar-legend-box" style="background:#dbeafe"></div>
+    <div class="calendar-legend-box" style="background:#93c5fd"></div>
+    <div class="calendar-legend-box" style="background:#3b82f6"></div>
+    <div class="calendar-legend-box" style="background:#1d4ed8"></div>
+    <span>완벽</span>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+function changeCalMonth(delta) {
+  calendarMonth += delta;
+  if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; }
+  if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
+  renderCalendar();
+}
+
+// Patch renderStats to also render calendar
+const _origRenderStats = renderStats;
+renderStats = function() {
+  _origRenderStats();
+  renderCalendar();
+};
+
+// --- PWA Service Worker ---
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(function() {});
+}
+
+// --- Init ---
+checkNotifPermission();
+renderToday();
+</script>
+</body>
+</html>
