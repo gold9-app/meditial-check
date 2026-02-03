@@ -319,6 +319,12 @@ function toggleCheck(id, event) {
     saveCheckTimes(ct);
   }
 
+  // 재고 0이면 자동 삭제
+  if (isChecking && supp.stock <= 0) {
+    const removeIdx = list.findIndex(s => s.id === id);
+    if (removeIdx !== -1) list.splice(removeIdx, 1);
+  }
+
   saveRecords(records);
   saveSupplements(list);
   renderToday();
