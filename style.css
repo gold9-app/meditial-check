@@ -1935,6 +1935,100 @@ body {
   border-color: var(--red);
 }
 
+/* Event tab */
+.event-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+.event-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.event-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  animation: fadeInUp 0.4s ease both;
+}
+.event-card:nth-child(2) { animation-delay: 0.08s; }
+.event-card:nth-child(3) { animation-delay: 0.16s; }
+.event-card:hover {
+  box-shadow: var(--card-hover);
+  transform: translateY(-2px);
+  border-color: var(--accent-border);
+}
+.event-badge {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  white-space: nowrap;
+}
+[data-theme="dark"] .event-badge {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+.event-badge.ended {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+[data-theme="dark"] .event-badge.ended {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+.event-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+}
+.event-card-desc {
+  display: none;
+}
+.event-arrow {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+.event-card:hover .event-arrow {
+  transform: translateX(3px);
+  color: var(--accent);
+}
+
+/* Event card expanded layout for wider view */
+@media (min-width: 360px) {
+  .event-card {
+    flex-wrap: wrap;
+  }
+  .event-card-title {
+    flex: 1;
+  }
+  .event-card-desc {
+    display: block;
+    width: 100%;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: -4px;
+    padding-left: 62px;
+    order: 4;
+  }
+}
+
 /* Responsive */
 @media (min-width: 480px) {
   body { padding: 0; }
