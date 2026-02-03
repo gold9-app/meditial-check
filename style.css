@@ -1022,20 +1022,25 @@ body {
   padding: 12px 16px;
   background: linear-gradient(90deg, #fef3c7, #fde68a, #fef3c7);
   background-size: 200% 100%;
-  animation: tickerShine 3s ease-in-out infinite;
-  border-bottom: 1px solid #fbbf24;
+  animation: tickerShine 3s ease-in-out infinite, tickerGlow 2s ease-in-out infinite;
   cursor: pointer;
   overflow: hidden;
   position: relative;
+  border: none;
+  box-shadow: 0 0 8px rgba(251,191,36,0.3), inset 0 0 8px rgba(251,191,36,0.15);
 }
 @keyframes tickerShine {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
 }
+@keyframes tickerGlow {
+  0%, 100% { box-shadow: 0 0 6px rgba(251,191,36,0.25), inset 0 0 6px rgba(251,191,36,0.1); }
+  50% { box-shadow: 0 0 14px rgba(251,191,36,0.5), inset 0 0 10px rgba(251,191,36,0.2); }
+}
 [data-theme="dark"] .event-ticker {
   background: linear-gradient(90deg, rgba(251,191,36,0.1), rgba(245,158,11,0.18), rgba(251,191,36,0.1));
   background-size: 200% 100%;
-  border-bottom-color: rgba(245,158,11,0.4);
+  box-shadow: 0 0 8px rgba(245,158,11,0.2), inset 0 0 8px rgba(245,158,11,0.08);
 }
 .event-ticker-badge {
   flex-shrink: 0;
