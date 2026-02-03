@@ -135,7 +135,7 @@ function renderSavingsTrack() {
       </div>
       <div class="savings-track-bar">
         <div class="savings-track-fill" style="width:${pct}%"></div>
-        <div class="savings-track-runner" style="left:${pct}%">🪙</div>
+        <div class="savings-track-runner" style="left:${pct}%">🏃</div>
       </div>
     </div>
   `;
