@@ -144,12 +144,12 @@
     </div>
     <div class="event-sub-content active" id="eventList">
       <div class="event-list">
-        <a class="event-card" href="https://meditial.co.kr/event/detail.html?product_no=56&cate_no=103&display_group=1" target="_blank">
+        <div class="event-card" onclick="openEventDetail()">
           <span class="event-badge">진행중</span>
           <div class="event-card-title">메디셜 신규 회원 이벤트</div>
           <div class="event-card-desc">150,000원 혜택 즉시제공!</div>
           <span class="event-arrow">→</span>
-        </a>
+        </div>
         <a class="event-card" href="https://meditial.co.kr/event/list.html?cate_no=103" target="_blank">
           <span class="event-badge">진행중</span>
           <div class="event-card-title">작심3월 챌린지</div>
@@ -200,6 +200,23 @@
     <span class="nav-label">이벤트</span>
   </button>
 </nav>
+
+<!-- Event Detail -->
+<div class="event-detail-overlay" id="eventDetailOverlay">
+  <div class="event-detail">
+    <div class="event-detail-header">
+      <button class="event-detail-back" onclick="closeEventDetail()">← 뒤로</button>
+      <span class="event-detail-title">메디셜 신규 회원 이벤트</span>
+    </div>
+    <div class="event-detail-body">
+      <img src="img/benefit_01.jpg" alt="혜택 01" class="event-detail-img">
+      <a href="https://meditial.co.kr/event/detail.html?product_no=56&cate_no=103&display_group=1" target="_blank">
+        <img src="img/benefit_02.gif" alt="쿠폰 받으러 가기" class="event-detail-img event-detail-cta">
+      </a>
+      <img src="img/benefit_03.jpg" alt="혜택 03" class="event-detail-img">
+    </div>
+  </div>
+</div>
 
 <!-- Badge Popup -->
 <div class="badge-popup-overlay" id="badgePopup">

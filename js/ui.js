@@ -146,6 +146,16 @@ function switchToManage() {
   renderManage();
 }
 
+// --- Event Detail ---
+function openEventDetail() {
+  document.getElementById('eventDetailOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeEventDetail() {
+  document.getElementById('eventDetailOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
 // --- Guide Toggle ---
 function toggleGuide(btn) {
   btn.classList.toggle('open');
