@@ -85,10 +85,11 @@ function renderStats() {
     if (list.every(s => dayRec.includes(s.id))) perfectDays++;
   });
 
+  const totalSavings = calcSavings();
   document.getElementById('statSummary').innerHTML = `
     <div class="stat-box"><div class="value">${overallRate}%</div><div class="label">전체 복용률</div></div>
     <div class="stat-box"><div class="value">${perfectDays}일</div><div class="label">완벽한 날</div></div>
-    <div class="stat-box"><div class="value">${(perfectDays * 100).toLocaleString()}원</div><div class="label">적립금</div></div>
+    <div class="stat-box"><div class="value">${totalSavings.toLocaleString()}원</div><div class="label">총 적립금</div></div>
   `;
 
   let barsHtml = '';
