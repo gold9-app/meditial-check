@@ -165,6 +165,21 @@ function closeRepurchasePopup() {
   document.getElementById('repurchasePopup').classList.remove('active');
 }
 
+// --- Event Ticker ---
+(function() {
+  const items = document.querySelectorAll('.event-ticker-item');
+  if (items.length < 2) return;
+  let current = 0;
+  items[0].classList.add('active');
+  setInterval(() => {
+    items[current].classList.remove('active');
+    items[current].classList.add('out');
+    setTimeout(() => items[current].classList.remove('out'), 400);
+    current = (current + 1) % items.length;
+    items[current].classList.add('active');
+  }, 3000);
+})();
+
 // --- Guide Toggle ---
 function toggleGuide(btn) {
   btn.classList.toggle('open');
