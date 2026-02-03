@@ -1935,11 +1935,43 @@ body {
 }
 
 /* Event tab */
-.event-title {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-primary);
+.event-sub-tabs {
+  display: flex;
+  gap: 8px;
   margin-bottom: 18px;
+}
+.event-sub-tab {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Inter', sans-serif;
+}
+.event-sub-tab:hover { border-color: var(--accent-border); color: var(--accent); }
+.event-sub-tab.active {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+[data-theme="dark"] .event-sub-tab.active {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+.event-sub-content {
+  display: none;
+  animation: tabFadeIn 0.4s ease;
+}
+.event-sub-content.active {
+  display: block;
+}
+.event-badge.notice {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
 }
 .event-list {
   display: flex;

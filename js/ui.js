@@ -128,6 +128,16 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
+// --- Event Sub-tabs ---
+document.querySelectorAll('.event-sub-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.event-sub-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.event-sub-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.sub).classList.add('active');
+  });
+});
+
 function switchToManage() {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
