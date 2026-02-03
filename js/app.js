@@ -63,7 +63,16 @@ function resetApp() {
 
 // --- PWA Service Worker ---
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(function() {});
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.onupdatefound = () => {
+      const newSW = reg.installing;
+      newSW.onstatechange = () => {
+        if (newSW.state === 'activated') {
+          document.getElementById('updateBanner').style.display = 'flex';
+        }
+      };
+    };
+  }).catch(() => {});
 }
 
 // --- Init ---
