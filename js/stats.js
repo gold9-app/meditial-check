@@ -191,8 +191,8 @@ function renderCalendar() {
     const dr = records[dk] || [];
     if (list.every(s => dr.includes(s.id))) monthPerfect++;
   }
-  const monthSavings = monthPerfect * 100;
-  html += `<div class="calendar-savings-summary">💰 총 적립금: <span>${monthSavings.toLocaleString()}원</span></div>`;
+  const totalSavings = calcSavings();
+  html += `<div class="calendar-savings-summary">💰 총 적립금: <span>${totalSavings.toLocaleString()}원</span></div>`;
 
   container.innerHTML = html;
 }
@@ -206,7 +206,14 @@ function changeCalMonth(delta) {
 
 function openDateCheck(dateKey) {
   const parts = dateKey.split('-');
-  selectedDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  const target = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  target.setHours(0,0,0,0);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const limit = new Date(today);
+  limit.setDate(limit.getDate() - 2);
+  if (target < limit || target > today) return;
+  selectedDate = target;
   // Switch to today tab
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));

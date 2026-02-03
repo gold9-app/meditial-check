@@ -23,6 +23,8 @@
       <div class="welcome-title">MEDITIAL</div>
       <div class="welcome-desc">매일 건강에 한걸음 나아가고<br>적립금도 받아가세요!</div>
       <input type="text" id="nicknameInput" placeholder="이름을 입력하세요" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
+      <label class="birthday-label" for="birthdayInput">생년월일</label>
+      <input type="date" id="birthdayInput" class="birthday-input">
       <button class="welcome-btn" onclick="saveNickname()">시작하기</button>
     </div>
   </div>
@@ -116,6 +118,13 @@
       </div>
       <button class="nickname-change-btn" onclick="promptNicknameChange()">변경</button>
     </div>
+    <div class="nickname-section" id="birthdaySection">
+      <div>
+        <span class="nickname-label">생년월일: </span>
+        <span class="nickname-value" id="birthdayValue">미설정</span>
+      </div>
+      <button class="nickname-change-btn" onclick="promptBirthdayChange()">변경</button>
+    </div>
     <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
     <div id="manageList"></div>
     <div class="reset-section">
@@ -145,6 +154,7 @@
   <div class="badge-popup-content">
     <span class="badge-popup-icon" id="badgePopupIcon"></span>
     <div class="badge-popup-title">업적 달성!</div>
+    <div class="badge-popup-reward">500원 추가적립!</div>
     <div class="badge-popup-name" id="badgePopupName"></div>
     <div class="badge-popup-desc" id="badgePopupDesc"></div>
     <button class="badge-popup-close" onclick="closeBadgePopup()">확인</button>

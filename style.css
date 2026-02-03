@@ -1302,6 +1302,12 @@ body {
   font-size: 1.2rem;
   font-weight: 800;
   color: #f59e0b;
+  margin-bottom: 4px;
+}
+.badge-popup-reward {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #22c55e;
   margin-bottom: 6px;
 }
 .badge-popup-name {
@@ -1782,6 +1788,19 @@ body {
 .welcome-box input:focus {
   border-color: rgba(255,255,255,0.6);
   background: rgba(255,255,255,0.2);
+}
+.welcome-box .birthday-label {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 14px;
+  margin-bottom: 6px;
+}
+.welcome-box .birthday-input {
+  color-scheme: dark;
+}
+.welcome-box .birthday-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
 }
 .welcome-box .welcome-btn {
   width: 100%;

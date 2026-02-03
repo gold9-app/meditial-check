@@ -1,6 +1,7 @@
 // --- Badge / Achievement System ---
 const BADGES_KEY = 'supp_badges';
 const CHECK_TIMES_KEY = 'supp_check_times';
+const BADGE_REWARDS_KEY = 'supp_badge_rewards';
 
 const BADGES = [
   // 연속 복용
@@ -14,20 +15,30 @@ const BADGES = [
     check: () => calculateStreak() >= 14 },
   { id: 'perfect_month', icon: '🏆', name: '퍼펙트 먼스', desc: '30일 연속 전체 복용', category: '연속 복용',
     check: () => calculateStreak() >= 30 },
+  { id: 'streak_50', icon: '🏅', name: '50일 연속', desc: '50일 연속 전체 복용', category: '연속 복용',
+    check: () => calculateStreak() >= 50 },
   { id: 'ironman', icon: '💎', name: '철인', desc: '100일 연속 전체 복용', category: '연속 복용',
     check: () => calculateStreak() >= 100 },
+  { id: 'streak_200', icon: '💫', name: '200일 연속', desc: '200일 연속 전체 복용', category: '연속 복용',
+    check: () => calculateStreak() >= 200 },
   { id: 'year_master', icon: '👑', name: '1년 마스터', desc: '365일 연속 전체 복용', category: '연속 복용',
     check: () => calculateStreak() >= 365 },
 
   // 누적 복용
   { id: 'total_10', icon: '💊', name: '10알 돌파', desc: '총 10회 복용 체크', category: '누적 복용',
     check: () => getTotalChecks() >= 10 },
+  { id: 'total_50', icon: '💉', name: '50알 돌파', desc: '총 50회 복용 체크', category: '누적 복용',
+    check: () => getTotalChecks() >= 50 },
   { id: 'total_100', icon: '💪', name: '100알 클럽', desc: '총 100회 복용 체크', category: '누적 복용',
     check: () => getTotalChecks() >= 100 },
   { id: 'total_500', icon: '🛡️', name: '500알 전사', desc: '총 500회 복용 체크', category: '누적 복용',
     check: () => getTotalChecks() >= 500 },
   { id: 'total_1000', icon: '🔱', name: '1000알 전설', desc: '총 1000회 복용 체크', category: '누적 복용',
     check: () => getTotalChecks() >= 1000 },
+  { id: 'total_2000', icon: '⚔️', name: '2000알 용사', desc: '총 2000회 복용 체크', category: '누적 복용',
+    check: () => getTotalChecks() >= 2000 },
+  { id: 'total_5000', icon: '🏰', name: '5000알 왕', desc: '총 5000회 복용 체크', category: '누적 복용',
+    check: () => getTotalChecks() >= 5000 },
 
   // 특수 업적
   { id: 'early_bird', icon: '🐤', name: '얼리버드', desc: '오전 7시 이전에 체크', category: '특수 업적',
@@ -40,6 +51,10 @@ const BADGES = [
     check: () => loadSupplements().length >= 8 },
   { id: 'consistency', icon: '📈', name: '꾸준함의 힘', desc: '최근 30일 복용률 90% 이상', category: '특수 업적',
     check: () => getLast30DaysRate() >= 90 },
+  { id: 'all_kill', icon: '💥', name: '올킬', desc: '3종 이상 등록 후 하루 전체 복용', category: '특수 업적',
+    check: () => hasAllKill() },
+  { id: 'birthday_check', icon: '🎂', name: '생일 복용', desc: '내 생일에 전체 복용', category: '특수 업적',
+    check: () => hasBirthdayFull() },
 
   // 시간대 업적
   { id: 'monday_miracle', icon: '🌟', name: '월요일의 기적', desc: '월요일 5번 전체 복용', category: '시간대 업적',
@@ -61,6 +76,12 @@ function loadCheckTimes() {
 }
 function saveCheckTimes(ct) {
   localStorage.setItem(CHECK_TIMES_KEY, JSON.stringify(ct));
+}
+function loadBadgeRewards() {
+  return JSON.parse(localStorage.getItem(BADGE_REWARDS_KEY) || '[]');
+}
+function saveBadgeRewards(arr) {
+  localStorage.setItem(BADGE_REWARDS_KEY, JSON.stringify(arr));
 }
 
 function getTotalChecks() {
@@ -140,6 +161,34 @@ function hasNewYearFull() {
   });
 }
 
+function hasAllKill() {
+  const list = loadSupplements();
+  if (list.length < 3) return false;
+  const records = loadRecords();
+  return Object.keys(records).some(dk => {
+    const dayRec = records[dk] || [];
+    return list.every(s => dayRec.includes(s.id));
+  });
+}
+
+function hasBirthdayFull() {
+  const birthday = localStorage.getItem('supp_birthday');
+  if (!birthday) return false;
+  const list = loadSupplements();
+  if (list.length === 0) return false;
+  const records = loadRecords();
+  const parts = birthday.split('-');
+  const mm = parts[1];
+  const dd = parts[2];
+  return Object.keys(records).some(dk => {
+    if (dk.endsWith('-' + mm + '-' + dd)) {
+      const dayRec = records[dk] || [];
+      return list.every(s => dayRec.includes(s.id));
+    }
+    return false;
+  });
+}
+
 function hasCheckBefore7() {
   const ct = loadCheckTimes();
   return Object.values(ct).some(time => {
@@ -169,19 +218,30 @@ let badgePopupShowing = false;
 
 function checkBadges() {
   const earned = loadBadges();
+  const rewarded = loadBadgeRewards();
   const newBadges = [];
+  let changed = false;
   BADGES.forEach(b => {
     if (!earned[b.id]) {
       try {
         if (b.check()) {
           earned[b.id] = todayKey();
-          newBadges.push(b);
+          changed = true;
+          if (!rewarded.includes(b.id)) {
+            rewarded.push(b.id);
+            newBadges.push(b);
+          }
         }
       } catch(e) {}
     }
   });
-  if (newBadges.length > 0) {
+  if (changed) {
     saveBadges(earned);
+    saveBadgeRewards(rewarded);
+    renderHeaderProgress();
+    renderSavingsTrack();
+  }
+  if (newBadges.length > 0) {
     newBadges.forEach(b => badgePopupQueue.push(b));
     if (!badgePopupShowing) showNextBadgePopup();
   }

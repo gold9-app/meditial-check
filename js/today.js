@@ -113,7 +113,8 @@ function calcSavings() {
     const dayRec = records[key];
     if (list.every(s => dayRec.includes(s.id))) perfectDays++;
   }
-  return perfectDays * 100;
+  const badgeRewards = loadBadgeRewards().length * 500;
+  return perfectDays * 100 + badgeRewards;
 }
 
 function renderSavingsTrack() {
@@ -158,7 +159,7 @@ function calculateStreak() {
     d.setDate(d.getDate() - 1);
   }
 
-  for (let i = 0; i < 365; i++) {
+  for (let i = 0; i < 730; i++) {
     const dk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     const dayRec = records[dk] || [];
     if (list.every(s => dayRec.includes(s.id))) {
@@ -270,7 +271,12 @@ function toggleCheck(id, event) {
 
   if (isChecking) {
     records[key].push(id);
-    if (supp.stock > 0) supp.stock--;
+    if (supp.stock > 0) {
+      supp.stock--;
+      const sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}');
+      sl[`${key}_${id}`] = true;
+      localStorage.setItem('supp_stock_log', JSON.stringify(sl));
+    }
     saveCheckTime(id);
 
     // Haptic + confetti
@@ -300,7 +306,13 @@ function toggleCheck(id, event) {
     }
   } else {
     records[key].splice(idx, 1);
-    supp.stock++;
+    const sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}');
+    const slKey = `${key}_${id}`;
+    if (sl[slKey]) {
+      supp.stock++;
+      delete sl[slKey];
+      localStorage.setItem('supp_stock_log', JSON.stringify(sl));
+    }
     // Remove check time record
     const ct = loadCheckTimes();
     delete ct[`${key}_${id}`];
