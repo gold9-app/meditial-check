@@ -22,7 +22,7 @@
       <div class="welcome-icon">💊</div>
       <div class="welcome-title">MEDITIAL</div>
       <div class="welcome-desc">매일 건강에 한걸음 나아가고<br>적립금도 받아가세요!</div>
-      <input type="text" id="nicknameInput" placeholder="이름을 입력하세요" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
+      <input type="text" id="nicknameInput" placeholder="이름을 입력하세요 (필수)" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
       <label class="birthday-label" for="birthdayInput">생년월일</label>
       <input type="date" id="birthdayInput" class="birthday-input">
       <button class="welcome-btn" onclick="saveNickname()">시작하기</button>
@@ -111,22 +111,27 @@
   </div>
 
   <div class="tab-content" id="manage">
-    <div class="nickname-section" id="nicknameSection">
-      <div>
-        <span class="nickname-label">닉네임: </span>
-        <span class="nickname-value" id="nicknameValue"></span>
-      </div>
-      <button class="nickname-change-btn" onclick="promptNicknameChange()">변경</button>
+    <div class="manage-group">
+      <h3 class="manage-group-title">내 영양제 관리</h3>
+      <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
+      <div id="manageList"></div>
     </div>
-    <div class="nickname-section" id="birthdaySection">
-      <div>
-        <span class="nickname-label">생년월일: </span>
-        <span class="nickname-value" id="birthdayValue">미설정</span>
+    <div class="manage-group">
+      <h3 class="manage-group-title">내 정보 관리</h3>
+      <div class="nickname-section" id="nicknameSection">
+        <div>
+          <span class="nickname-label">이름: </span>
+          <span class="nickname-value" id="nicknameValue"></span>
+        </div>
+        <button class="nickname-change-btn" onclick="promptNicknameChange()">변경</button>
       </div>
-      <button class="nickname-change-btn" onclick="promptBirthdayChange()">변경</button>
+      <div class="nickname-section" id="birthdaySection">
+        <div>
+          <span class="nickname-label">생년월일: </span>
+          <span class="nickname-value" id="birthdayValue">미설정</span>
+        </div>
+      </div>
     </div>
-    <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
-    <div id="manageList"></div>
     <div class="reset-section">
       <button class="reset-btn" onclick="resetApp()">🔄 앱 초기화</button>
     </div>

@@ -29,11 +29,13 @@ function saveNickname() {
     input.focus();
     return;
   }
-  localStorage.setItem('supp_nickname', name);
   const birthdayInput = document.getElementById('birthdayInput');
-  if (birthdayInput && birthdayInput.value) {
-    localStorage.setItem('supp_birthday', birthdayInput.value);
+  if (!birthdayInput || !birthdayInput.value) {
+    birthdayInput.focus();
+    return;
   }
+  localStorage.setItem('supp_nickname', name);
+  localStorage.setItem('supp_birthday', birthdayInput.value);
   displayNickname(name);
   displayBirthday();
   const overlay = document.getElementById('welcomeOverlay');
@@ -43,23 +45,10 @@ function saveNickname() {
 
 function promptNicknameChange() {
   const current = localStorage.getItem('supp_nickname') || '';
-  const newName = prompt('새 닉네임을 입력하세요:', current);
+  const newName = prompt('새 이름을 입력하세요:', current);
   if (newName !== null && newName.trim()) {
     localStorage.setItem('supp_nickname', newName.trim());
     displayNickname(newName.trim());
-  }
-}
-
-function promptBirthdayChange() {
-  const current = localStorage.getItem('supp_birthday') || '';
-  const newBirthday = prompt('생일을 입력하세요 (YYYY-MM-DD):', current);
-  if (newBirthday !== null && newBirthday.trim()) {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(newBirthday.trim())) {
-      localStorage.setItem('supp_birthday', newBirthday.trim());
-      displayBirthday();
-    } else {
-      alert('올바른 형식으로 입력해주세요 (예: 1990-01-15)');
-    }
   }
 }
 
