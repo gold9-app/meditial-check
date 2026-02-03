@@ -319,10 +319,26 @@ function toggleCheck(id, event) {
     saveCheckTimes(ct);
   }
 
-  // 재고 0이면 자동 삭제
+  // 재고 0이면 사라지는 애니메이션 + 자동 삭제 + 재구매 팝업
   if (isChecking && supp.stock <= 0) {
+    const suppName = supp.name;
+    const cardEl = document.querySelector(`.supp-card[data-id="${id}"]`);
     const removeIdx = list.findIndex(s => s.id === id);
     if (removeIdx !== -1) list.splice(removeIdx, 1);
+    saveRecords(records);
+    saveSupplements(list);
+    checkBadges();
+    if (cardEl) {
+      cardEl.classList.add('stock-out');
+      cardEl.addEventListener('animationend', () => {
+        renderToday();
+        showRepurchasePopup(suppName);
+      }, { once: true });
+    } else {
+      renderToday();
+      showRepurchasePopup(suppName);
+    }
+    return;
   }
 
   saveRecords(records);

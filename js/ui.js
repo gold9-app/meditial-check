@@ -156,6 +156,15 @@ function closeEventDetail() {
   document.body.style.overflow = '';
 }
 
+// --- Repurchase Popup ---
+function showRepurchasePopup(name) {
+  document.getElementById('repurchaseName').textContent = name;
+  document.getElementById('repurchasePopup').classList.add('active');
+}
+function closeRepurchasePopup() {
+  document.getElementById('repurchasePopup').classList.remove('active');
+}
+
 // --- Guide Toggle ---
 function toggleGuide(btn) {
   btn.classList.toggle('open');
