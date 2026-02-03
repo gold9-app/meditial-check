@@ -27,7 +27,7 @@ function checkAlarms() {
       const notifKey = `notif_${key}_${s.id}`;
       if (!sessionStorage.getItem(notifKey)) {
         new Notification('영양제 알림', {
-          body: `${s.name} (${s.dose}) 복용할 시간이에요!`,
+          body: `${s.name} 복용할 시간이에요!`,
           icon: 'icon.png'
         });
         sessionStorage.setItem(notifKey, '1');
