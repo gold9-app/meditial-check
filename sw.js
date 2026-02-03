@@ -1,7 +1,16 @@
-const CACHE_NAME = 'meditial-v6';
+const CACHE_NAME = 'meditial-v7';
 const ASSETS = [
   './',
-  './index.html'
+  './index.html',
+  './style.css',
+  './js/data.js',
+  './js/ui.js',
+  './js/badges.js',
+  './js/notifications.js',
+  './js/today.js',
+  './js/stats.js',
+  './js/manage.js',
+  './js/app.js'
 ];
 
 // Install: cache core assets

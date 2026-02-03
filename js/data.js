@@ -1,0 +1,74 @@
+// --- Supplement Colors ---
+const SUPP_COLORS = {
+  '블러드싸이클': { bg: '#fef2f2', border: '#fca5a5', bar: '#ef4444', text: '#dc2626' },
+  '헬리컷':       { bg: '#f0fdf4', border: '#86efac', bar: '#22c55e', text: '#16a34a' },
+  '판토오틴':     { bg: '#eff6ff', border: '#93c5fd', bar: '#3b82f6', text: '#2563eb' },
+  '글루타치온':   { bg: '#fdf2f8', border: '#f9a8d4', bar: '#ec4899', text: '#db2777' },
+  '멜라토닌':     { bg: '#f5f3ff', border: '#c4b5fd', bar: '#8b5cf6', text: '#7c3aed' },
+  '혈당컷':       { bg: '#f7fee7', border: '#bef264', bar: '#84cc16', text: '#65a30d' },
+  '활성엽산':     { bg: '#f3f0ff', border: '#d8b4fe', bar: '#a78bfa', text: '#8b5cf6' },
+  '상어연골환':   { bg: '#faf5ff', border: '#e9d5ff', bar: '#c084fc', text: '#a855f7' },
+};
+const SUPP_COLORS_DARK = {
+  '블러드싸이클': { bg: 'rgba(239,68,68,0.1)', border: 'rgba(252,165,165,0.3)', bar: '#f87171', text: '#fca5a5' },
+  '헬리컷':       { bg: 'rgba(34,197,94,0.1)', border: 'rgba(134,239,172,0.3)', bar: '#4ade80', text: '#86efac' },
+  '판토오틴':     { bg: 'rgba(59,130,246,0.1)', border: 'rgba(147,197,253,0.3)', bar: '#60a5fa', text: '#93c5fd' },
+  '글루타치온':   { bg: 'rgba(236,72,153,0.1)', border: 'rgba(249,168,212,0.3)', bar: '#f472b6', text: '#f9a8d4' },
+  '멜라토닌':     { bg: 'rgba(139,92,246,0.1)', border: 'rgba(196,181,253,0.3)', bar: '#a78bfa', text: '#c4b5fd' },
+  '혈당컷':       { bg: 'rgba(132,204,22,0.1)', border: 'rgba(190,242,100,0.3)', bar: '#a3e635', text: '#bef264' },
+  '활성엽산':     { bg: 'rgba(167,139,250,0.1)', border: 'rgba(216,180,254,0.3)', bar: '#c084fc', text: '#d8b4fe' },
+  '상어연골환':   { bg: 'rgba(192,132,252,0.1)', border: 'rgba(233,213,255,0.3)', bar: '#d8b4fe', text: '#e9d5ff' },
+};
+function getSuppColor(name) {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const palette = isDark ? SUPP_COLORS_DARK : SUPP_COLORS;
+  return palette[name] || (isDark
+    ? { bg: 'rgba(148,163,184,0.1)', border: 'rgba(148,163,184,0.2)', bar: '#94a3b8', text: '#cbd5e1' }
+    : { bg: '#f8fafc', border: '#e2e8f0', bar: '#94a3b8', text: '#64748b' });
+}
+
+// --- Data ---
+const STORAGE_KEY = 'supp_data';
+const RECORDS_KEY = 'supp_records';
+
+function loadSupplements() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+}
+function saveSupplements(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+function loadRecords() {
+  return JSON.parse(localStorage.getItem(RECORDS_KEY) || '{}');
+}
+function saveRecords(rec) {
+  localStorage.setItem(RECORDS_KEY, JSON.stringify(rec));
+}
+
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function formatDate(d) {
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+}
+
+// --- Selected Date ---
+let selectedDate = new Date();
+
+function selectedDateKey() {
+  const d = selectedDate;
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function isSelectedToday() {
+  return selectedDateKey() === todayKey();
+}
+
+// --- Escape HTML ---
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
