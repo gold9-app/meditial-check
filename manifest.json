@@ -1,6 +1,6 @@
 {
   "name": "메디셜 영양제 체크",
-  "short_name": "메디셜 영양제 적립",
+  "short_name": "메디셜",
   "description": "매일 영양제 복용을 관리하고 추적하세요",
   "start_url": "./index.html",
   "display": "standalone",
