@@ -1728,6 +1728,166 @@ body {
   100% { transform: rotate(-8deg) scale(1); opacity: 0.9; }
 }
 
+/* Welcome Overlay */
+.welcome-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  animation: overlayFadeIn 0.3s ease;
+}
+[data-theme="dark"] .welcome-overlay {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1a2744 50%, #162032 100%);
+}
+.welcome-overlay.fade-out {
+  animation: welcomeFadeOut 0.4s ease forwards;
+}
+@keyframes welcomeFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.welcome-box {
+  text-align: center;
+  padding: 0 28px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.welcome-box .welcome-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+}
+.welcome-box .welcome-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+.welcome-box .welcome-desc {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 36px;
+  line-height: 1.5;
+}
+.welcome-box input {
+  width: 100%;
+  max-width: 280px;
+  padding: 14px 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  text-align: center;
+  transition: all 0.3s;
+  -webkit-appearance: none;
+}
+.welcome-box input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+.welcome-box input:focus {
+  border-color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.2);
+}
+.welcome-box .welcome-btn {
+  width: 100%;
+  max-width: 280px;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  background: #fff;
+  color: #2563eb;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.welcome-box .welcome-btn:active {
+  transform: scale(0.97);
+  background: #f0f4ff;
+}
+
+/* Nickname display */
+#nicknameDisplay {
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0.85;
+  margin-left: 2px;
+}
+
+/* Nickname change section in manage tab */
+.nickname-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nickname-section .nickname-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.nickname-section .nickname-value {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.nickname-section .nickname-change-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--accent);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nickname-section .nickname-change-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Reset button */
+.reset-section {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border);
+  text-align: center;
+}
+.reset-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.reset-btn:active {
+  color: var(--red);
+  border-color: var(--red);
+}
+
 /* Responsive */
 @media (min-width: 480px) {
   body { padding: 0; }
@@ -1736,10 +1896,22 @@ body {
 </head>
 <body>
 <div class="app">
+  <!-- Welcome Overlay -->
+  <div class="welcome-overlay" id="welcomeOverlay" style="display:none;">
+    <div class="welcome-box">
+      <div class="welcome-icon">💊</div>
+      <div class="welcome-title">MEDITIAL</div>
+      <div class="welcome-desc">매일 건강에 한걸음 나아가고<br>적립금도 받아가세요!</div>
+      <input type="text" id="nicknameInput" placeholder="이름을 입력하세요" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
+      <button class="welcome-btn" onclick="saveNickname()">시작하기</button>
+    </div>
+  </div>
+
   <header class="header">
     <div class="header-top">
       <div class="header-info">
         <h1>MEDITIAL 영양제 체크</h1>
+        <span id="nicknameDisplay"></span>
         <div class="date" id="headerDate"></div>
       </div>
       <button class="dark-toggle" id="darkToggle" onclick="toggleDarkMode()" aria-label="다크모드 전환">
@@ -1817,8 +1989,18 @@ body {
   </div>
 
   <div class="tab-content" id="manage">
+    <div class="nickname-section" id="nicknameSection">
+      <div>
+        <span class="nickname-label">닉네임: </span>
+        <span class="nickname-value" id="nicknameValue"></span>
+      </div>
+      <button class="nickname-change-btn" onclick="promptNicknameChange()">변경</button>
+    </div>
     <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
     <div id="manageList"></div>
+    <div class="reset-section">
+      <button class="reset-btn" onclick="resetApp()">🔄 앱 초기화</button>
+    </div>
   </div>
 </div>
 
@@ -2114,17 +2296,13 @@ function renderHeaderProgress() {
 function calcSavings() {
   const list = loadSupplements();
   if (list.length === 0) return 0;
-  const now = new Date();
   const records = loadRecords();
   let perfectDays = 0;
-  for (let i = 29; i >= 0; i--) {
-    const d = new Date(now);
-    d.setDate(d.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    const dayRec = records[key] || [];
+  for (const key in records) {
+    const dayRec = records[key];
     if (list.every(s => dayRec.includes(s.id))) perfectDays++;
   }
-  return perfectDays * 167;
+  return perfectDays * 100;
 }
 
 function renderSavingsTrack() {
@@ -2271,8 +2449,8 @@ function renderToday() {
       <div class="today-empty">
         <span class="empty-icon">💊</span>
         <div class="empty-title">아직 등록된 영양제가 없어요</div>
-        <div class="empty-desc">관리 탭에서 영양제를 추가하고<br>매일 복용을 체크해보세요!</div>
-        <button class="add-btn" onclick="switchToManage()" style="max-width:220px;margin:0 auto">+ 영양제 추가하기</button>
+        <div class="empty-desc">영양제를 추가하고<br>매일 복용을 체크해보세요!</div>
+        <button class="add-btn" onclick="openModal()" style="max-width:220px;margin:0 auto">+ 영양제 추가하기</button>
       </div>`;
     return;
   }
@@ -2529,7 +2707,7 @@ function renderStats() {
   document.getElementById('statSummary').innerHTML = `
     <div class="stat-box"><div class="value">${overallRate}%</div><div class="label">전체 복용률</div></div>
     <div class="stat-box"><div class="value">${perfectDays}일</div><div class="label">완벽한 날</div></div>
-    <div class="stat-box"><div class="value">${(perfectDays * 167).toLocaleString()}원</div><div class="label">적립금</div></div>
+    <div class="stat-box"><div class="value">${(perfectDays * 100).toLocaleString()}원</div><div class="label">적립금</div></div>
   `;
 
   let barsHtml = '';
@@ -2856,7 +3034,7 @@ function renderCalendar() {
     const dr = records[dk] || [];
     if (list.every(s => dr.includes(s.id))) monthPerfect++;
   }
-  const monthSavings = monthPerfect * 167;
+  const monthSavings = monthPerfect * 100;
   html += `<div class="calendar-savings-summary">💰 총 적립금: <span>${monthSavings.toLocaleString()}원</span></div>`;
 
   container.innerHTML = html;
@@ -3192,7 +3370,55 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(function() {});
 }
 
+// --- Nickname ---
+function initNickname() {
+  const nickname = localStorage.getItem('supp_nickname');
+  if (!nickname) {
+    document.getElementById('welcomeOverlay').style.display = 'flex';
+  } else {
+    displayNickname(nickname);
+  }
+}
+
+function displayNickname(name) {
+  document.getElementById('nicknameDisplay').textContent = name + '님';
+  document.getElementById('nicknameValue').textContent = name;
+}
+
+function saveNickname() {
+  const input = document.getElementById('nicknameInput');
+  const name = input.value.trim();
+  if (!name) {
+    input.focus();
+    return;
+  }
+  localStorage.setItem('supp_nickname', name);
+  displayNickname(name);
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.classList.add('fade-out');
+  setTimeout(() => { overlay.style.display = 'none'; }, 400);
+}
+
+function promptNicknameChange() {
+  const current = localStorage.getItem('supp_nickname') || '';
+  const newName = prompt('새 닉네임을 입력하세요:', current);
+  if (newName !== null && newName.trim()) {
+    localStorage.setItem('supp_nickname', newName.trim());
+    displayNickname(newName.trim());
+  }
+}
+
+// --- Reset ---
+function resetApp() {
+  if (!confirm('모든 데이터가 삭제되고 초기 상태로 돌아갑니다.\n정말 초기화하시겠습니까?')) return;
+  if (!confirm('되돌릴 수 없습니다. 계속하시겠습니까?')) return;
+  const keys = [STORAGE_KEY, RECORDS_KEY, BADGES_KEY, CHECK_TIMES_KEY, 'supp_nickname', 'darkMode'];
+  keys.forEach(k => localStorage.removeItem(k));
+  location.reload();
+}
+
 // --- Init ---
+initNickname();
 checkNotifPermission();
 renderToday();
 </script>
