@@ -64,15 +64,28 @@ function resetApp() {
 // --- PWA Service Worker ---
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(reg => {
+    // 이미 대기 중인 새 SW가 있으면 바로 배너 표시
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      document.getElementById('updateBanner').style.display = 'flex';
+    }
     reg.onupdatefound = () => {
       const newSW = reg.installing;
+      if (!newSW) return;
       newSW.onstatechange = () => {
-        if (newSW.state === 'activated') {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
           document.getElementById('updateBanner').style.display = 'flex';
         }
       };
     };
   }).catch(() => {});
+  // 새 SW가 제어권을 가져갈 때 배너 표시
+  let hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController) {
+      document.getElementById('updateBanner').style.display = 'flex';
+    }
+    hadController = true;
+  });
 }
 
 // --- Init ---
