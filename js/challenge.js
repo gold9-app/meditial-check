@@ -354,11 +354,13 @@ function closeChallengeDetail() {
   document.body.style.overflow = '';
 }
 
-var _sheetImg = null;
 function sendToSheet(data) {
   var params = Object.keys(data).map(function(key) {
     return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
   }).join('&');
-  _sheetImg = new Image();
-  _sheetImg.src = SHEET_URL + '?' + params;
+  var iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
+  iframe.src = SHEET_URL + '?' + params;
+  document.body.appendChild(iframe);
+  setTimeout(function() { iframe.remove(); }, 10000);
 }
