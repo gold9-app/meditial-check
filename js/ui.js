@@ -1,7 +1,7 @@
 // --- Dark Mode ---
 function initDarkMode() {
   const saved = localStorage.getItem('darkMode');
-  if (saved === 'true' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  if (saved === 'true') {
     document.documentElement.setAttribute('data-theme', 'dark');
     document.getElementById('darkIcon').textContent = '☀️';
   }
