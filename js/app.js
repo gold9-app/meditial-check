@@ -88,6 +88,50 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// --- PWA Install Banner ---
+let deferredPrompt = null;
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!sessionStorage.getItem('installBannerDismissed')) {
+    document.getElementById('installBannerAndroid').style.display = 'block';
+  }
+});
+
+document.getElementById('installBtn').addEventListener('click', () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    document.getElementById('installBannerAndroid').style.display = 'none';
+  });
+});
+
+document.getElementById('installDismissAndroid').addEventListener('click', () => {
+  document.getElementById('installBannerAndroid').style.display = 'none';
+  sessionStorage.setItem('installBannerDismissed', '1');
+});
+
+document.getElementById('installDismissIOS').addEventListener('click', () => {
+  document.getElementById('installBannerIOS').style.display = 'none';
+  sessionStorage.setItem('installBannerDismissed', '1');
+});
+
+// iOS detection: show guide banner if not standalone and not already dismissed
+(function checkIOSInstallBanner() {
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (isIOS && !isStandalone && !sessionStorage.getItem('installBannerDismissed')) {
+    document.getElementById('installBannerIOS').style.display = 'block';
+  }
+})();
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBannerAndroid').style.display = 'none';
+  deferredPrompt = null;
+});
+
 // --- Init ---
 initNickname();
 checkNotifPermission();
