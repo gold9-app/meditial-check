@@ -30,6 +30,11 @@ function saveNickname() {
     input.focus();
     return;
   }
+  if (name.length > 10) {
+    alert('이름은 10자 이내로 입력해주세요');
+    input.focus();
+    return;
+  }
   const birthdayInput = document.getElementById('birthdayInput');
   if (!birthdayInput || !birthdayInput.value) {
     birthdayInput.focus();
@@ -49,6 +54,10 @@ function promptNicknameChange() {
   const current = localStorage.getItem('supp_nickname') || '';
   const newName = prompt('새 이름을 입력하세요:', current);
   if (newName !== null && newName.trim()) {
+    if (newName.trim().length > 10) {
+      alert('이름은 10자 이내로 입력해주세요');
+      return;
+    }
     localStorage.setItem('supp_nickname', newName.trim());
     displayNickname(newName.trim());
   }

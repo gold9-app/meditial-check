@@ -26,10 +26,12 @@ function checkAlarms() {
     if (s.time === hm && !todayRec.includes(s.id)) {
       const notifKey = `notif_${key}_${s.id}`;
       if (!sessionStorage.getItem(notifKey)) {
-        new Notification('영양제 알림', {
-          body: `${s.name} 복용할 시간이에요!`,
-          icon: 'icon.png'
-        });
+        try {
+          new Notification('영양제 알림', {
+            body: `${s.name} 복용할 시간이에요!`,
+            icon: 'icon.png'
+          });
+        } catch(e) { console.error('Notification error', e); }
         sessionStorage.setItem(notifKey, '1');
       }
     }
@@ -55,10 +57,12 @@ function checkEveningReminder() {
   if (sessionStorage.getItem(notifKey)) return;
 
   const names = missed.map(s => s.name).join(', ');
-  new Notification('미복용 영양제 알림', {
-    body: `아직 안 드신 영양제가 ${missed.length}개 있어요!\n${names}`,
-    icon: 'icon.png'
-  });
+  try {
+    new Notification('미복용 영양제 알림', {
+      body: `아직 안 드신 영양제가 ${missed.length}개 있어요!\n${names}`,
+      icon: 'icon.png'
+    });
+  } catch(e) { console.error('Notification error', e); }
   sessionStorage.setItem(notifKey, '1');
 }
 

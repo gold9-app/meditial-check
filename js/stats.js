@@ -59,7 +59,7 @@ function renderStats() {
   for (let i = 0; i < days; i++) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    dateKeys.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`);
+    dateKeys.push(dateToKey(d));
   }
 
   let totalPossible = 0;
@@ -149,7 +149,7 @@ function renderCalendar() {
   }
 
   for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dateKey = dateToKey(new Date(year, month, d));
     const isToday = dateKey === todayStr;
     const isFuture = new Date(year, month, d) > today;
 
@@ -187,7 +187,7 @@ function renderCalendar() {
   // Monthly savings summary
   let monthPerfect = 0;
   for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dk = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dk = dateToKey(new Date(year, month, d));
     if (new Date(year, month, d) > today) continue;
     const dr = records[dk] || [];
     if (list.every(s => dr.includes(s.id))) monthPerfect++;

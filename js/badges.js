@@ -67,26 +67,29 @@ const BADGES = [
   // 특수 업적 - 챌린지
   { id: 'challenge_3month', icon: '🏅', name: '작심삼월 마스터', desc: '3개월 챌린지 70% 달성', category: '특수 업적',
     check: () => {
-      const ch = JSON.parse(localStorage.getItem('supp_challenge') || 'null');
-      return ch && ch.completed;
+      try { const ch = JSON.parse(localStorage.getItem('supp_challenge') || 'null'); return ch && ch.completed; }
+      catch(e) { return false; }
     }
   },
 ];
 
 function loadBadges() {
-  return JSON.parse(localStorage.getItem(BADGES_KEY) || '{}');
+  try { return JSON.parse(localStorage.getItem(BADGES_KEY) || '{}'); }
+  catch(e) { console.error('loadBadges parse error', e); return {}; }
 }
 function saveBadges(b) {
   localStorage.setItem(BADGES_KEY, JSON.stringify(b));
 }
 function loadCheckTimes() {
-  return JSON.parse(localStorage.getItem(CHECK_TIMES_KEY) || '{}');
+  try { return JSON.parse(localStorage.getItem(CHECK_TIMES_KEY) || '{}'); }
+  catch(e) { console.error('loadCheckTimes parse error', e); return {}; }
 }
 function saveCheckTimes(ct) {
   localStorage.setItem(CHECK_TIMES_KEY, JSON.stringify(ct));
 }
 function loadBadgeRewards() {
-  return JSON.parse(localStorage.getItem(BADGE_REWARDS_KEY) || '[]');
+  try { return JSON.parse(localStorage.getItem(BADGE_REWARDS_KEY) || '[]'); }
+  catch(e) { console.error('loadBadgeRewards parse error', e); return []; }
 }
 function saveBadgeRewards(arr) {
   localStorage.setItem(BADGE_REWARDS_KEY, JSON.stringify(arr));
@@ -107,7 +110,7 @@ function getLast30DaysRate() {
   for (let i = 0; i < 30; i++) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    const dk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const dk = dateToKey(d);
     const dayRec = records[dk] || [];
     list.forEach(s => {
       possible++;

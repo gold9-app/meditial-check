@@ -1,3 +1,11 @@
+// --- Global Error Handler ---
+window.onerror = function(msg, src, line, col, err) {
+  console.error('Global error:', msg, src, line, col, err);
+};
+window.addEventListener('unhandledrejection', function(e) {
+  console.error('Unhandled rejection:', e.reason);
+});
+
 // --- Supplement Colors ---
 const SUPP_COLORS = {
   '블러드싸이클': { bg: '#fef2f2', border: '#fca5a5', bar: '#ef4444', text: '#dc2626' },
@@ -32,21 +40,26 @@ const STORAGE_KEY = 'supp_data';
 const RECORDS_KEY = 'supp_records';
 
 function loadSupplements() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { console.error('loadSupplements parse error', e); return []; }
 }
 function saveSupplements(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 function loadRecords() {
-  return JSON.parse(localStorage.getItem(RECORDS_KEY) || '{}');
+  try { return JSON.parse(localStorage.getItem(RECORDS_KEY) || '{}'); }
+  catch(e) { console.error('loadRecords parse error', e); return {}; }
 }
 function saveRecords(rec) {
   localStorage.setItem(RECORDS_KEY, JSON.stringify(rec));
 }
 
-function todayKey() {
-  const d = new Date();
+function dateToKey(d) {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function todayKey() {
+  return dateToKey(new Date());
 }
 
 function formatDate(d) {
@@ -58,8 +71,36 @@ function formatDate(d) {
 let selectedDate = new Date();
 
 function selectedDateKey() {
-  const d = selectedDate;
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  return dateToKey(selectedDate);
+}
+
+// --- Streak Calculation ---
+function calculateStreak() {
+  const list = loadSupplements();
+  if (list.length === 0) return 0;
+  const records = loadRecords();
+  let streak = 0;
+  const d = new Date();
+
+  const todayK = todayKey();
+  const todayRec = records[todayK] || [];
+  const todayDone = list.every(s => todayRec.includes(s.id));
+
+  if (!todayDone) {
+    d.setDate(d.getDate() - 1);
+  }
+
+  for (let i = 0; i < 730; i++) {
+    const dk = dateToKey(d);
+    const dayRec = records[dk] || [];
+    if (list.every(s => dayRec.includes(s.id))) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
 }
 
 function isSelectedToday() {

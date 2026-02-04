@@ -169,4 +169,6 @@ function closeRepurchasePopup() {
 function toggleGuide(btn) {
   btn.classList.toggle('open');
   document.getElementById('guideBody').classList.toggle('open');
+  const isOpen = btn.classList.contains('open');
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }

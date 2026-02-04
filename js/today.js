@@ -141,37 +141,6 @@ function renderSavingsTrack() {
   `;
 }
 
-// --- Streak Calculation ---
-function calculateStreak() {
-  const list = loadSupplements();
-  if (list.length === 0) return 0;
-  const records = loadRecords();
-  let streak = 0;
-  const d = new Date();
-
-  // Check today first
-  const todayK = todayKey();
-  const todayRec = records[todayK] || [];
-  const todayDone = list.every(s => todayRec.includes(s.id));
-
-  // If today is not done yet, start checking from yesterday
-  if (!todayDone) {
-    d.setDate(d.getDate() - 1);
-  }
-
-  for (let i = 0; i < 730; i++) {
-    const dk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    const dayRec = records[dk] || [];
-    if (list.every(s => dayRec.includes(s.id))) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-  return streak;
-}
-
 // --- Today ---
 function renderToday() {
   const list = loadSupplements();
@@ -289,7 +258,7 @@ function toggleCheck(id, event) {
     records[key].push(id);
     if (supp.stock > 0) {
       supp.stock--;
-      const sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}');
+      let sl; try { sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}'); } catch(e) { sl = {}; }
       sl[`${key}_${id}`] = true;
       localStorage.setItem('supp_stock_log', JSON.stringify(sl));
     }
@@ -322,7 +291,7 @@ function toggleCheck(id, event) {
     }
   } else {
     records[key].splice(idx, 1);
-    const sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}');
+    let sl; try { sl = JSON.parse(localStorage.getItem('supp_stock_log') || '{}'); } catch(e) { sl = {}; }
     const slKey = `${key}_${id}`;
     if (sl[slKey]) {
       supp.stock++;

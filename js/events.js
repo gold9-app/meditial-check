@@ -48,13 +48,15 @@ const EVENT_DATA = [
     title: '메디셜 앱 이용 안내',
     desc: '영양제 체크 앱 사용법을 확인하세요.',
     ticker: '',
-    url: 'https://meditial.co.kr',
+    url: '',
+    detail: 'guide',
   },
 ];
 
 // =============================================
-// 렌더링 (수정 불필요)
+// 렌더링
 // =============================================
+let tickerIntervalId = null;
 
 function renderEvents() {
   // 이벤트 탭
@@ -67,35 +69,43 @@ function renderEvents() {
     const badgeClass = ev.status === '종료' ? 'ended' : ev.type === 'notice' ? 'notice' : '';
     const isChallenge = ev.detail === 'challenge';
     const isCoupon = ev.detail === 'coupon';
-    const isDetail = ev.detail && ev.detail !== 'challenge' && ev.detail !== 'coupon' && !ev.url;
+    const isGuide = ev.detail === 'guide';
+    const isDetail = ev.detail && ev.detail !== 'challenge' && ev.detail !== 'coupon' && ev.detail !== 'guide' && !ev.url;
 
     let card;
-    if (isCoupon) {
+    if (isGuide) {
+      card = `<div class="event-card" onclick="openGuidePopup()">
+        <span class="event-badge ${badgeClass}">${esc(ev.status)}</span>
+        <div class="event-card-title">${esc(ev.title)}</div>
+        <div class="event-card-desc">${esc(ev.desc)}</div>
+        <span class="event-arrow">→</span>
+      </div>`;
+    } else if (isCoupon) {
       card = `<div class="event-card" onclick="openCouponPopup()">
-        <span class="event-badge ${badgeClass}">${ev.status}</span>
-        <div class="event-card-title">${ev.title}</div>
-        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-badge ${badgeClass}">${esc(ev.status)}</span>
+        <div class="event-card-title">${esc(ev.title)}</div>
+        <div class="event-card-desc">${esc(ev.desc)}</div>
         <span class="event-arrow">→</span>
       </div>`;
     } else if (isChallenge) {
       card = `<div class="event-card" onclick="openChallengeDetail()">
-        <span class="event-badge ${badgeClass}">${ev.status}</span>
-        <div class="event-card-title">${ev.title}</div>
-        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-badge ${badgeClass}">${esc(ev.status)}</span>
+        <div class="event-card-title">${esc(ev.title)}</div>
+        <div class="event-card-desc">${esc(ev.desc)}</div>
         <span class="event-arrow">→</span>
       </div>`;
     } else if (isDetail) {
       card = `<div class="event-card" onclick="openEventDetail()">
-        <span class="event-badge ${badgeClass}">${ev.status}</span>
-        <div class="event-card-title">${ev.title}</div>
-        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-badge ${badgeClass}">${esc(ev.status)}</span>
+        <div class="event-card-title">${esc(ev.title)}</div>
+        <div class="event-card-desc">${esc(ev.desc)}</div>
         <span class="event-arrow">→</span>
       </div>`;
     } else {
       card = `<a class="event-card" href="${ev.url}" target="_blank">
-        <span class="event-badge ${badgeClass}">${ev.status}</span>
-        <div class="event-card-title">${ev.title}</div>
-        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-badge ${badgeClass}">${esc(ev.status)}</span>
+        <div class="event-card-title">${esc(ev.title)}</div>
+        <div class="event-card-desc">${esc(ev.desc)}</div>
         <span class="event-arrow">→</span>
       </a>`;
     }
@@ -112,6 +122,8 @@ function renderEvents() {
 }
 
 function renderTicker() {
+  if (tickerIntervalId) { clearInterval(tickerIntervalId); tickerIntervalId = null; }
+
   const ticker = document.getElementById('eventTicker');
   const items = EVENT_DATA.filter(ev => ev.ticker && ev.status !== '종료');
   if (items.length === 0) {
@@ -125,13 +137,13 @@ function renderTicker() {
     const isCoupon = ev.detail === 'coupon';
     const isDetail = ev.detail && ev.detail !== 'challenge' && ev.detail !== 'coupon' && !ev.url;
     if (isCoupon) {
-      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openCouponPopup()" style="cursor:pointer">${ev.ticker}</span>`;
+      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openCouponPopup()" style="cursor:pointer">${esc(ev.ticker)}</span>`;
     } else if (isChallenge) {
-      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openChallengeDetail()" style="cursor:pointer">${ev.ticker}</span>`;
+      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openChallengeDetail()" style="cursor:pointer">${esc(ev.ticker)}</span>`;
     } else if (isDetail) {
-      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openEventDetail()" style="cursor:pointer">${ev.ticker}</span>`;
+      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openEventDetail()" style="cursor:pointer">${esc(ev.ticker)}</span>`;
     } else {
-      tickerHTML += `<a class="event-ticker-item${i === 0 ? ' active' : ''}" href="${ev.url}" target="_blank">${ev.ticker}</a>`;
+      tickerHTML += `<a class="event-ticker-item${i === 0 ? ' active' : ''}" href="${ev.url}" target="_blank">${esc(ev.ticker)}</a>`;
     }
   });
   tickerHTML += '</div>';
@@ -142,7 +154,7 @@ function renderTicker() {
   if (items.length > 1) {
     const tickerItems = ticker.querySelectorAll('.event-ticker-item');
     let current = 0;
-    setInterval(() => {
+    tickerIntervalId = setInterval(() => {
       tickerItems[current].classList.remove('active');
       tickerItems[current].classList.add('out');
       const prev = current;
@@ -151,6 +163,14 @@ function renderTicker() {
       tickerItems[current].classList.add('active');
     }, 3000);
   }
+}
+
+// --- Guide Popup ---
+function openGuidePopup() {
+  document.getElementById('guidePopup').classList.add('active');
+}
+function closeGuidePopup() {
+  document.getElementById('guidePopup').classList.remove('active');
 }
 
 // --- Coupon Popup ---

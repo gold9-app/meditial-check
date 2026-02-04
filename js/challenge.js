@@ -4,7 +4,8 @@ const CHALLENGE_DURATION = 1;
 const CHALLENGE_TARGET = 70;
 
 function loadChallenge() {
-  return JSON.parse(localStorage.getItem(CHALLENGE_KEY) || 'null');
+  try { return JSON.parse(localStorage.getItem(CHALLENGE_KEY) || 'null'); }
+  catch(e) { console.error('loadChallenge parse error', e); return null; }
 }
 
 function saveChallenge(data) {
@@ -81,7 +82,7 @@ function getChallengeProgress() {
     for (let i = 0; i < cappedElapsed; i++) {
       const d = new Date(start);
       d.setDate(d.getDate() + i);
-      const dk = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      const dk = dateToKey(d);
       const dayRec = records[dk] || [];
       if (list.every(s => dayRec.includes(s.id))) {
         perfectDays++;
@@ -271,7 +272,7 @@ function renderChallengeCalendar(p) {
   }
 
   for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dateKey = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dateKey = dateToKey(new Date(year, month, d));
     const thisDate = new Date(year, month, d);
     const isToday = dateKey === todayStr;
     const isFuture = thisDate > today;

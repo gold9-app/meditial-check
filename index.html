@@ -20,13 +20,14 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
+<main class="app">
   <!-- Welcome Overlay -->
   <div class="welcome-overlay" id="welcomeOverlay" style="display:none;">
     <div class="welcome-box">
       <div class="welcome-icon">💊</div>
       <div class="welcome-title">MEDITIAL</div>
       <div class="welcome-desc">매일 건강에 한걸음 나아가고<br>적립금도 받아가세요!</div>
+      <label for="nicknameInput" class="sr-only">이름</label>
       <input type="text" id="nicknameInput" placeholder="이름을 입력하세요 (필수)" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
       <label class="birthday-label" for="birthdayInput">생년월일</label>
       <input type="date" id="birthdayInput" class="birthday-input">
@@ -58,12 +59,12 @@
     알림받고 적립 꾸준히 하기! 여기를 클릭하세요.
   </div>
 
-  <div class="tab-content active" id="today">
+  <div class="tab-content active" id="today" role="tabpanel" aria-label="오늘 복용">
     <div id="dateNav"></div>
     <div id="todayList"></div>
     <a href="https://meditial.co.kr/" target="_blank" class="cta-btn"><span class="cta-label">다 드셨나요?</span><span class="cta-click">Click!</span></a>
     <div class="guide-section">
-      <button class="guide-toggle" onclick="toggleGuide(this)">
+      <button class="guide-toggle" onclick="toggleGuide(this)" aria-label="사용법 안내 펼치기" aria-expanded="false">
         <span>사용법 안내</span>
         <span class="arrow">▼</span>
       </button>
@@ -120,11 +121,11 @@
     </div>
   </div>
 
-  <div class="tab-content" id="stats">
+  <div class="tab-content" id="stats" role="tabpanel" aria-label="통계">
     <div id="savingsHero"></div>
     <div class="stat-period">
-      <button class="period-btn active" data-days="7">최근 7일</button>
-      <button class="period-btn" data-days="30">최근 30일</button>
+      <button class="period-btn active" data-days="7" aria-label="최근 7일 통계">최근 7일</button>
+      <button class="period-btn" data-days="30" aria-label="최근 30일 통계">최근 30일</button>
     </div>
     <div class="stat-summary" id="statSummary"></div>
     <div class="chart-section">
@@ -138,7 +139,7 @@
     <div id="badgeSection"></div>
   </div>
 
-  <div class="tab-content" id="manage">
+  <div class="tab-content" id="manage" role="tabpanel" aria-label="관리">
     <div class="manage-group">
       <h3 class="manage-group-title">내 영양제 관리</h3>
       <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
@@ -164,7 +165,7 @@
     </div>
   </div>
 
-  <div class="tab-content" id="event">
+  <div class="tab-content" id="event" role="tabpanel" aria-label="이벤트">
     <div class="event-sub-tabs">
       <button class="event-sub-tab active" data-sub="eventList">이벤트</button>
       <button class="event-sub-tab" data-sub="noticeList">공지</button>
@@ -176,27 +177,27 @@
       <div class="event-list" id="noticeListInner"></div>
     </div>
   </div>
-</div>
+</main>
 
 <div class="update-banner" id="updateBanner" style="display:none" onclick="location.reload()">
   새 버전이 있습니다. 여기를 눌러 업데이트하세요!
 </div>
 
 <!-- Bottom Navigation -->
-<nav class="bottom-nav">
-  <button class="nav-item active" data-tab="today">
+<nav class="bottom-nav" role="tablist">
+  <button class="nav-item active" data-tab="today" role="tab" aria-label="오늘 복용">
     <span class="nav-icon">💊</span>
     <span class="nav-label">오늘</span>
   </button>
-  <button class="nav-item" data-tab="stats">
+  <button class="nav-item" data-tab="stats" role="tab" aria-label="통계">
     <span class="nav-icon">📊</span>
     <span class="nav-label">통계</span>
   </button>
-  <button class="nav-item" data-tab="manage">
+  <button class="nav-item" data-tab="manage" role="tab" aria-label="관리">
     <span class="nav-icon">⚙️</span>
     <span class="nav-label">관리</span>
   </button>
-  <button class="nav-item" data-tab="event">
+  <button class="nav-item" data-tab="event" role="tab" aria-label="이벤트">
     <span class="nav-icon">📢</span>
     <span class="nav-label">이벤트</span>
   </button>
@@ -218,7 +219,7 @@
 <div class="event-detail-overlay" id="eventDetailOverlay">
   <div class="event-detail">
     <div class="event-detail-header">
-      <button class="event-detail-back" onclick="closeEventDetail()">← 뒤로</button>
+      <button class="event-detail-back" onclick="closeEventDetail()" aria-label="뒤로 가기">← 뒤로</button>
       <span class="event-detail-title">메디셜 신규 회원 이벤트</span>
     </div>
     <div class="event-detail-body">
@@ -235,7 +236,7 @@
 <div class="challenge-overlay" id="challengeOverlay">
   <div class="challenge-detail">
     <div class="challenge-detail-header">
-      <button class="event-detail-back" onclick="closeChallengeDetail()">← 뒤로</button>
+      <button class="event-detail-back" onclick="closeChallengeDetail()" aria-label="뒤로 가기">← 뒤로</button>
       <span class="event-detail-title">작심삼월 챌린지</span>
     </div>
     <div class="challenge-detail-body" id="challengeBody"></div>
@@ -247,7 +248,7 @@
   <div class="guide-popup-content">
     <div class="guide-popup-header">
       <span class="guide-popup-title">앱 사용법</span>
-      <button class="guide-popup-close" onclick="closeGuidePopup()">✕</button>
+      <button class="guide-popup-close" onclick="closeGuidePopup()" aria-label="닫기">✕</button>
     </div>
     <div class="guide-popup-body">
       <div class="guide-popup-notice">
@@ -344,7 +345,7 @@
 <!-- Badge Detail Modal -->
 <div class="badge-detail-overlay" id="badgeDetail">
   <div class="badge-detail-content" id="badgeDetailContent">
-    <button class="badge-detail-close" onclick="closeBadgeDetail()">✕</button>
+    <button class="badge-detail-close" onclick="closeBadgeDetail()" aria-label="닫기">✕</button>
     <span class="badge-detail-icon" id="badgeDetailIcon"></span>
     <div class="badge-detail-name" id="badgeDetailName"></div>
     <div class="badge-detail-desc" id="badgeDetailDesc"></div>
@@ -371,7 +372,7 @@
     </div>
     <div class="install-banner-actions">
       <button class="install-banner-btn" id="installBtn">설치</button>
-      <button class="install-banner-close" id="installDismissAndroid">✕</button>
+      <button class="install-banner-close" id="installDismissAndroid" aria-label="닫기">✕</button>
     </div>
   </div>
 </div>
@@ -385,7 +386,7 @@
       <span>사파리 하단 <strong>공유</strong> 버튼 → <strong>홈 화면에 추가</strong>를 눌러 설치하세요!</span>
     </div>
     <div class="install-banner-actions">
-      <button class="install-banner-close" id="installDismissIOS">✕</button>
+      <button class="install-banner-close" id="installDismissIOS" aria-label="닫기">✕</button>
     </div>
   </div>
 </div>
@@ -400,7 +401,7 @@
     </div>
     <div class="install-banner-actions">
       <button class="install-banner-btn" id="openSafariBtn">Safari에서 열기</button>
-      <button class="install-banner-close" id="installDismissInApp">✕</button>
+      <button class="install-banner-close" id="installDismissInApp" aria-label="닫기">✕</button>
     </div>
   </div>
 </div>

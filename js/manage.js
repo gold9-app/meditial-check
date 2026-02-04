@@ -20,8 +20,8 @@ function renderManage() {
         <div class="manage-card-header">
           <span class="name" style="color:${clr.text}">${esc(s.name)}</span>
           <div class="manage-card-actions">
-            <button onclick="openModal('${s.id}')" title="수정">✏️</button>
-            <button class="delete-btn" onclick="deleteSupplement('${s.id}')" title="삭제">🗑️</button>
+            <button onclick="openModal('${s.id}')" title="수정" aria-label="${esc(s.name)} 수정">✏️</button>
+            <button class="delete-btn" onclick="deleteSupplement('${s.id}')" title="삭제" aria-label="${esc(s.name)} 삭제">🗑️</button>
           </div>
         </div>
         <div class="detail-row">${esc(s.time)} · ${esc(s.dose)}</div>
@@ -110,11 +110,15 @@ function saveSupplement() {
   const name = (sel === '__custom__' ? document.getElementById('inputCustomName').value.trim() : sel.trim());
   const time = document.getElementById('inputTime').value;
   const dose = document.getElementById('inputDose').value.trim();
-  const stock = parseInt(document.getElementById('inputStock').value) || 0;
+  let stock = parseInt(document.getElementById('inputStock').value) || 0;
   const editId = document.getElementById('editId').value;
 
   if (!name) { alert('영양제를 선택하세요'); return; }
+  if (name.length > 20) { alert('이름은 20자 이내로 입력해주세요'); return; }
+  if (!time) { alert('복용 시간을 선택해주세요'); return; }
   if (!dose) { alert('복용량을 입력하세요'); return; }
+  if (stock < 0) stock = 0;
+  if (stock > 9999) { alert('재고는 9999 이하로 입력해주세요'); return; }
 
   const list = loadSupplements();
 
