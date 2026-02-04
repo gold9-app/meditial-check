@@ -18,9 +18,11 @@ const SHEET_URL = 'https://script.google.com/a/macros/next-generation.co.kr/s/AK
 function startChallenge() {
   const codeInput = document.getElementById('challengeCodeInput');
   const phoneInput = document.getElementById('challengePhoneInput');
+  const birthInput = document.getElementById('challengeBirthInput');
   const error = document.getElementById('challengeCodeError');
   const code = codeInput ? codeInput.value.trim() : '';
   const phone = phoneInput ? phoneInput.value.trim() : '';
+  const birth = birthInput ? birthInput.value.trim() : '';
 
   // 참여코드 검증
   if (code !== CHALLENGE_CODE) {
@@ -45,14 +47,26 @@ function startChallenge() {
     return;
   }
 
+  // 생년월일 검증 (숫자 8자리)
+  const birthDigits = birth.replace(/[^0-9]/g, '');
+  if (!birth || birthDigits.length !== 8) {
+    if (error) {
+      error.textContent = '생년월일을 8자리로 입력해주세요. (예: 19900101)';
+      error.style.display = 'block';
+    }
+    if (birthInput) birthInput.classList.add('error');
+    vibrate([50, 30, 50]);
+    return;
+  }
+
   const fullPhone = '010-' + phone.trim();
   const name = localStorage.getItem('supp_nickname') || '';
   const data = { startDate: todayKey(), completed: false };
   saveChallenge(data);
 
-  // 스프레드시트로 전송 (히든 폼 방식)
+  // 스프레드시트로 전송
   if (SHEET_URL) {
-    sendToSheet({ name: name, phone: fullPhone, date: todayKey(), code: code });
+    sendToSheet({ name: name, phone: fullPhone, birth: birthDigits });
   }
 
   renderChallengeDetail();
@@ -163,6 +177,10 @@ function renderChallengeIntro() {
           <span class="phone-prefix">010-</span>
           <input type="tel" id="challengePhoneInput" class="challenge-code-input phone-suffix" placeholder="0000-0000" maxlength="9" inputmode="tel">
         </div>
+      </div>
+      <div class="challenge-code-group">
+        <label class="challenge-code-label">생년월일</label>
+        <input type="text" id="challengeBirthInput" class="challenge-code-input" placeholder="예: 19900101" maxlength="8" inputmode="numeric">
       </div>
       <div class="challenge-code-group">
         <label class="challenge-code-label">참여코드 입력</label>
