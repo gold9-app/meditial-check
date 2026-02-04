@@ -14,7 +14,7 @@
 // 8. 복사한 URL을 challenge.js의 SHEET_URL에 붙여넣기
 // ============================================
 
-function doPost(e) {
+function doGet(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var name = e.parameter.name || '';
   var phone = e.parameter.phone || '';
@@ -22,4 +22,8 @@ function doPost(e) {
   var code = e.parameter.code || '';
   sheet.appendRow([name, phone, date, code]);
   return ContentService.createTextOutput('ok');
+}
+
+function doPost(e) {
+  return doGet(e);
 }

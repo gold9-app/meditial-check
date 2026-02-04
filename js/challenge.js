@@ -355,27 +355,9 @@ function closeChallengeDetail() {
 }
 
 function sendToSheet(data) {
-  var iframe = document.getElementById('sheetIframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.id = 'sheetIframe';
-    iframe.name = 'sheetIframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = SHEET_URL;
-  form.target = 'sheetIframe';
-  form.style.display = 'none';
-  Object.keys(data).forEach(function(key) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = key;
-    input.value = data[key];
-    form.appendChild(input);
-  });
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(function() { form.remove(); }, 3000);
+  var params = Object.keys(data).map(function(key) {
+    return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+  }).join('&');
+  var img = new Image();
+  img.src = SHEET_URL + '?' + params;
 }
