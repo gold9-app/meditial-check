@@ -3,6 +3,7 @@ function initNickname() {
   const nickname = localStorage.getItem('supp_nickname');
   if (!nickname) {
     document.getElementById('welcomeOverlay').style.display = 'flex';
+    document.querySelector('.bottom-nav').style.display = 'none';
   } else {
     displayNickname(nickname);
     displayBirthday();
@@ -40,6 +41,7 @@ function saveNickname() {
   displayBirthday();
   const overlay = document.getElementById('welcomeOverlay');
   overlay.classList.add('fade-out');
+  document.querySelector('.bottom-nav').style.display = '';
   setTimeout(() => { overlay.style.display = 'none'; }, 400);
 }
 
