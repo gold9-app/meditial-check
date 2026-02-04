@@ -56,7 +56,7 @@ function promptNicknameChange() {
 function resetApp() {
   if (!confirm('모든 데이터가 삭제되고 초기 상태로 돌아갑니다.\n정말 초기화하시겠습니까?')) return;
   if (!confirm('되돌릴 수 없습니다. 계속하시겠습니까?')) return;
-  const keys = [STORAGE_KEY, RECORDS_KEY, BADGES_KEY, CHECK_TIMES_KEY, BADGE_REWARDS_KEY, 'supp_nickname', 'supp_birthday', 'supp_stock_log', 'darkMode'];
+  const keys = [STORAGE_KEY, RECORDS_KEY, BADGES_KEY, CHECK_TIMES_KEY, BADGE_REWARDS_KEY, CHALLENGE_KEY, 'supp_nickname', 'supp_birthday', 'supp_stock_log', 'darkMode'];
   keys.forEach(k => localStorage.removeItem(k));
   location.reload();
 }

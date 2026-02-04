@@ -63,6 +63,14 @@ const BADGES = [
     check: () => hasWeekendStreak7() },
   { id: 'new_year', icon: '🎊', name: '새해 결심', desc: '1월 1일 전체 복용', category: '시간대 업적',
     check: () => hasNewYearFull() },
+
+  // 특수 업적 - 챌린지
+  { id: 'challenge_3month', icon: '🏅', name: '작심삼월 마스터', desc: '3개월 챌린지 70% 달성', category: '특수 업적',
+    check: () => {
+      const ch = JSON.parse(localStorage.getItem('supp_challenge') || 'null');
+      return ch && ch.completed;
+    }
+  },
 ];
 
 function loadBadges() {

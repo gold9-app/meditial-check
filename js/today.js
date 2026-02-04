@@ -235,6 +235,22 @@ function renderToday() {
       </div>`;
   }
 
+  // 챌린지 참여 중이면 버튼 표시
+  if (isSelectedToday() && loadChallenge()) {
+    const cp = getChallengeProgress();
+    if (cp && !cp.completed) {
+      html += `
+        <div class="challenge-today-btn" onclick="openChallengeDetail()">
+          <span class="challenge-today-icon">🔥</span>
+          <div class="challenge-today-info">
+            <div class="challenge-today-title">작심삼월 챌린지</div>
+            <div class="challenge-today-sub">D-${cp.remainingDays} · 달성률 ${cp.rate}%</div>
+          </div>
+          <span class="event-arrow">→</span>
+        </div>`;
+    }
+  }
+
   sortedTimes.forEach(time => {
     html += `<div class="time-group">`;
     html += `<div class="time-group-label">${time}</div>`;

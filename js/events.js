@@ -20,7 +20,8 @@ const EVENT_DATA = [
     title: '작심삼월 챌린지',
     desc: '3월 연속 복용시 이벤트응모!',
     ticker: '🔥 작심삼월 챌린지 진행중!',
-    url: 'https://meditial.co.kr/event/list.html?cate_no=103',
+    url: '',
+    detail: 'challenge',
   },
   {
     type: 'event',
@@ -55,10 +56,18 @@ function renderEvents() {
 
   EVENT_DATA.forEach(ev => {
     const badgeClass = ev.status === '종료' ? 'ended' : ev.type === 'notice' ? 'notice' : '';
-    const isDetail = ev.detail && !ev.url;
+    const isChallenge = ev.detail === 'challenge';
+    const isDetail = ev.detail && ev.detail !== 'challenge' && !ev.url;
 
     let card;
-    if (isDetail) {
+    if (isChallenge) {
+      card = `<div class="event-card" onclick="openChallengeDetail()">
+        <span class="event-badge ${badgeClass}">${ev.status}</span>
+        <div class="event-card-title">${ev.title}</div>
+        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-arrow">→</span>
+      </div>`;
+    } else if (isDetail) {
       card = `<div class="event-card" onclick="openEventDetail()">
         <span class="event-badge ${badgeClass}">${ev.status}</span>
         <div class="event-card-title">${ev.title}</div>
@@ -95,8 +104,11 @@ function renderTicker() {
 
   let tickerHTML = '<span class="event-ticker-badge">EVENT</span><div class="event-ticker-wrap">';
   items.forEach((ev, i) => {
-    const isDetail = ev.detail && !ev.url;
-    if (isDetail) {
+    const isChallenge = ev.detail === 'challenge';
+    const isDetail = ev.detail && ev.detail !== 'challenge' && !ev.url;
+    if (isChallenge) {
+      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openChallengeDetail()" style="cursor:pointer">${ev.ticker}</span>`;
+    } else if (isDetail) {
       tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openEventDetail()" style="cursor:pointer">${ev.ticker}</span>`;
     } else {
       tickerHTML += `<a class="event-ticker-item${i === 0 ? ' active' : ''}" href="${ev.url}" target="_blank">${ev.ticker}</a>`;
