@@ -48,18 +48,9 @@ function startChallenge() {
   const data = { startDate: todayKey(), completed: false };
   saveChallenge(data);
 
-  // 스프레드시트로 전송
+  // 스프레드시트로 전송 (히든 폼 방식)
   if (SHEET_URL) {
-    const form = new FormData();
-    form.append('name', name);
-    form.append('phone', phone);
-    form.append('date', todayKey());
-    form.append('code', code);
-    fetch(SHEET_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: form
-    }).catch(() => {});
+    sendToSheet({ name: name, phone: phone, date: todayKey(), code: code });
   }
 
   renderChallengeDetail();
@@ -361,4 +352,30 @@ function openChallengeDetail() {
 function closeChallengeDetail() {
   document.getElementById('challengeOverlay').classList.remove('active');
   document.body.style.overflow = '';
+}
+
+function sendToSheet(data) {
+  var iframe = document.getElementById('sheetIframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'sheetIframe';
+    iframe.name = 'sheetIframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = SHEET_URL;
+  form.target = 'sheetIframe';
+  form.style.display = 'none';
+  Object.keys(data).forEach(function(key) {
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = data[key];
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(function() { form.remove(); }, 3000);
 }
