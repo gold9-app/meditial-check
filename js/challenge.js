@@ -48,7 +48,7 @@ function startChallenge() {
   const fullPhone = '010-' + phone.trim();
   const name = localStorage.getItem('supp_nickname') || '';
   const birth = localStorage.getItem('supp_birthday') || '';
-  const data = { startDate: todayKey(), completed: false };
+  const data = { startDate: todayKey(), completed: false, phone: fullPhone };
   saveChallenge(data);
 
   // 스프레드시트로 전송
@@ -319,6 +319,12 @@ function changeChallengeCalMonth(delta) {
 }
 
 function renderChallengeComplete(p) {
+  const ch = loadChallenge();
+  const applied = ch && ch.applied;
+  const couponBtn = applied
+    ? `<div class="challenge-applied">✅ 응모 완료!</div>`
+    : `<button class="challenge-coupon-btn" onclick="applyChallengeCoupon()">응모권 받기</button>`;
+
   return `
     <div class="challenge-complete">
       <div class="challenge-complete-icon">🎉</div>
@@ -345,7 +351,7 @@ function renderChallengeComplete(p) {
           <div class="label">달성률</div>
         </div>
       </div>
-      <a class="challenge-coupon-btn" href="https://meditial.co.kr/" target="_blank">응모권 받기</a>
+      ${couponBtn}
     </div>`;
 }
 
@@ -358,6 +364,15 @@ function openChallengeDetail() {
 function closeChallengeDetail() {
   document.getElementById('challengeOverlay').classList.remove('active');
   document.body.style.overflow = '';
+}
+
+function applyChallengeCoupon() {
+  const ch = loadChallenge();
+  if (!ch || !ch.phone) return;
+  sendToSheet({ action: 'apply', phone: ch.phone });
+  ch.applied = true;
+  saveChallenge(ch);
+  renderChallengeDetail();
 }
 
 function sendToSheet(data) {
