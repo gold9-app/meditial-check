@@ -118,12 +118,42 @@ document.getElementById('installDismissIOS').addEventListener('click', () => {
   sessionStorage.setItem('installBannerDismissed', '1');
 });
 
+// --- In-App Browser Detection ---
+function isInAppBrowser() {
+  const ua = navigator.userAgent || '';
+  return /KAKAOTALK|Instagram|FBAN|FBAV|Line\/|NAVER|Snapchat/i.test(ua);
+}
+
+document.getElementById('installDismissInApp').addEventListener('click', () => {
+  document.getElementById('installBannerInApp').style.display = 'none';
+  sessionStorage.setItem('installBannerDismissed', '1');
+});
+
+document.getElementById('openSafariBtn').addEventListener('click', () => {
+  const currentURL = location.href;
+  const ua = navigator.userAgent || '';
+
+  if (/KAKAOTALK/i.test(ua)) {
+    // 카카오톡: 외부 브라우저 열기 스킴
+    location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(currentURL);
+  } else {
+    // 기타 인앱 브라우저: 새 창으로 시도
+    window.open(currentURL, '_blank');
+  }
+});
+
 // iOS detection: show guide banner if not standalone and not already dismissed
 (function checkIOSInstallBanner() {
   const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent);
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
   if (isIOS && !isStandalone && !sessionStorage.getItem('installBannerDismissed')) {
-    document.getElementById('installBannerIOS').style.display = 'block';
+    if (isInAppBrowser()) {
+      // 인앱 브라우저 → Safari 열기 안내
+      document.getElementById('installBannerInApp').style.display = 'block';
+    } else {
+      // Safari → 홈 화면에 추가 안내
+      document.getElementById('installBannerIOS').style.display = 'block';
+    }
   }
 })();
 
