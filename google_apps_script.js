@@ -3,7 +3,7 @@
 // ============================================
 // 사용법:
 // 1. Google 스프레드시트를 새로 만드세요
-// 2. 첫 번째 행(A1:C1)에 헤더를 입력하세요: 이름 | 전화번호 | 생년월일
+// 2. 첫 번째 행(A1:D1)에 헤더를 입력하세요: 이름 | 생년월일 | 전화번호 | 참여일
 // 3. 상단 메뉴 → 확장 프로그램 → Apps Script 클릭
 // 4. 기존 코드를 모두 지우고 아래 코드를 붙여넣으세요
 // 5. 저장 (Ctrl+S)
@@ -17,9 +17,10 @@
 function doGet(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var name = e.parameter.name || '';
-  var phone = e.parameter.phone || '';
   var birth = e.parameter.birth || '';
-  sheet.appendRow([name, phone, birth]);
+  var phone = e.parameter.phone || '';
+  var date = e.parameter.date || '';
+  sheet.appendRow([name, birth, phone, date]);
   return ContentService.createTextOutput('ok');
 }
 
