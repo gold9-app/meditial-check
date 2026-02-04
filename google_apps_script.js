@@ -15,23 +15,11 @@
 // ============================================
 
 function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
-
-    sheet.appendRow([
-      data.name,
-      data.phone,
-      data.date,
-      data.code
-    ]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: 'ok' }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: 'error', message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var name = e.parameter.name || '';
+  var phone = e.parameter.phone || '';
+  var date = e.parameter.date || '';
+  var code = e.parameter.code || '';
+  sheet.appendRow([name, phone, date, code]);
+  return ContentService.createTextOutput('ok');
 }

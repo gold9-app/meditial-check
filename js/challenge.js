@@ -50,16 +50,15 @@ function startChallenge() {
 
   // 스프레드시트로 전송
   if (SHEET_URL) {
+    const form = new FormData();
+    form.append('name', name);
+    form.append('phone', phone);
+    form.append('date', todayKey());
+    form.append('code', code);
     fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name,
-        phone: phone,
-        date: todayKey(),
-        code: code
-      })
+      body: form
     }).catch(() => {});
   }
 
