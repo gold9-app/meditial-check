@@ -1383,6 +1383,109 @@ body {
   margin-top: 0;
 }
 
+/* Coupon Popup */
+.coupon-popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--modal-overlay);
+  backdrop-filter: blur(6px);
+  z-index: 300;
+  justify-content: center;
+  align-items: center;
+}
+.coupon-popup-overlay.active {
+  display: flex;
+  animation: overlayFadeIn 0.3s ease;
+}
+.coupon-popup-content {
+  background: var(--bg-primary);
+  border-radius: 24px;
+  padding: 36px 28px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  animation: badgePopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow-lg);
+}
+.coupon-popup-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+.coupon-popup-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.coupon-popup-code {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 2px dashed var(--accent);
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+  user-select: all;
+}
+.coupon-popup-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+.coupon-popup-copy {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 10px;
+  transition: all 0.3s;
+}
+.coupon-popup-copy:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+}
+.coupon-popup-link {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  transition: all 0.3s;
+}
+.coupon-popup-link:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.coupon-popup-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  padding: 8px;
+}
+
 /* Badge Popup */
 .badge-popup-overlay {
   display: none;

@@ -25,11 +25,12 @@ const EVENT_DATA = [
   },
   {
     type: 'event',
-    status: '종료',
-    title: '앱 출시 기념 이벤트',
-    desc: '참여해주신 모든 분들 감사합니다.',
-    ticker: '',              // 빈 문자열 = 띠배너에 표시 안 함
-    url: 'https://meditial.co.kr/event/list.html?cate_no=103',
+    status: '진행중',
+    title: '앱 출시 기념 5000원 바로적립!',
+    desc: '쿠폰번호를 복사해서 바로 적립하세요!',
+    ticker: '🎉 앱 출시 기념 5000원 바로적립!',
+    url: '',
+    detail: 'coupon',
   },
 
   // ── 공지 ──
@@ -65,10 +66,18 @@ function renderEvents() {
   EVENT_DATA.forEach(ev => {
     const badgeClass = ev.status === '종료' ? 'ended' : ev.type === 'notice' ? 'notice' : '';
     const isChallenge = ev.detail === 'challenge';
-    const isDetail = ev.detail && ev.detail !== 'challenge' && !ev.url;
+    const isCoupon = ev.detail === 'coupon';
+    const isDetail = ev.detail && ev.detail !== 'challenge' && ev.detail !== 'coupon' && !ev.url;
 
     let card;
-    if (isChallenge) {
+    if (isCoupon) {
+      card = `<div class="event-card" onclick="openCouponPopup()">
+        <span class="event-badge ${badgeClass}">${ev.status}</span>
+        <div class="event-card-title">${ev.title}</div>
+        <div class="event-card-desc">${ev.desc}</div>
+        <span class="event-arrow">→</span>
+      </div>`;
+    } else if (isChallenge) {
       card = `<div class="event-card" onclick="openChallengeDetail()">
         <span class="event-badge ${badgeClass}">${ev.status}</span>
         <div class="event-card-title">${ev.title}</div>
@@ -113,8 +122,11 @@ function renderTicker() {
   let tickerHTML = '<span class="event-ticker-badge">EVENT</span><div class="event-ticker-wrap">';
   items.forEach((ev, i) => {
     const isChallenge = ev.detail === 'challenge';
-    const isDetail = ev.detail && ev.detail !== 'challenge' && !ev.url;
-    if (isChallenge) {
+    const isCoupon = ev.detail === 'coupon';
+    const isDetail = ev.detail && ev.detail !== 'challenge' && ev.detail !== 'coupon' && !ev.url;
+    if (isCoupon) {
+      tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openCouponPopup()" style="cursor:pointer">${ev.ticker}</span>`;
+    } else if (isChallenge) {
       tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openChallengeDetail()" style="cursor:pointer">${ev.ticker}</span>`;
     } else if (isDetail) {
       tickerHTML += `<span class="event-ticker-item${i === 0 ? ' active' : ''}" onclick="openEventDetail()" style="cursor:pointer">${ev.ticker}</span>`;
@@ -139,6 +151,22 @@ function renderTicker() {
       tickerItems[current].classList.add('active');
     }, 3000);
   }
+}
+
+// --- Coupon Popup ---
+function openCouponPopup() {
+  document.getElementById('couponPopup').classList.add('active');
+}
+function closeCouponPopup() {
+  document.getElementById('couponPopup').classList.remove('active');
+}
+function copyCouponCode() {
+  const code = document.getElementById('couponCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    alert('쿠폰번호가 복사되었습니다!');
+  }).catch(() => {
+    prompt('쿠폰번호를 복사하세요:', code);
+  });
 }
 
 renderEvents();
