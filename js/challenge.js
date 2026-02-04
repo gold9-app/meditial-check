@@ -35,7 +35,7 @@ function startChallenge() {
 
   // 전화번호 검증 (010 제외 8자리)
   const phoneDigits = phone.replace(/[^0-9]/g, '');
-  if (!phone || phoneDigits.length < 8) {
+  if (!phone || phoneDigits.length !== 8) {
     if (error) {
       error.textContent = '전화번호를 올바르게 입력해주세요.';
       error.style.display = 'block';
