@@ -36,6 +36,14 @@ const EVENT_DATA = [
   {
     type: 'notice',
     status: '공지',
+    title: '쿠폰 입력 안내',
+    desc: '보유한 쿠폰을 입력하고 할인 혜택을 받으세요!',
+    ticker: '',
+    url: 'https://meditial.co.kr/myshop/coupon/coupon.html',
+  },
+  {
+    type: 'notice',
+    status: '공지',
     title: '메디셜 앱 이용 안내',
     desc: '영양제 체크 앱 사용법을 확인하세요.',
     ticker: '',
