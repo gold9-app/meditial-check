@@ -1,6 +1,6 @@
 // --- Challenge System (작심삼월) ---
 const CHALLENGE_KEY = 'supp_challenge';
-const CHALLENGE_DURATION = 1;
+const CHALLENGE_DURATION = 90;
 const CHALLENGE_TARGET = 70;
 
 function loadChallenge() {
