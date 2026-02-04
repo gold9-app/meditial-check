@@ -33,8 +33,9 @@ function startChallenge() {
     return;
   }
 
-  // 전화번호 검증
-  if (!phone || phone.replace(/[^0-9]/g, '').length < 10) {
+  // 전화번호 검증 (010 제외 8자리)
+  const phoneDigits = phone.replace(/[^0-9]/g, '');
+  if (!phone || phoneDigits.length < 8) {
     if (error) {
       error.textContent = '전화번호를 올바르게 입력해주세요.';
       error.style.display = 'block';
@@ -44,13 +45,14 @@ function startChallenge() {
     return;
   }
 
+  const fullPhone = '010-' + phone.trim();
   const name = localStorage.getItem('supp_nickname') || '';
   const data = { startDate: todayKey(), completed: false };
   saveChallenge(data);
 
   // 스프레드시트로 전송 (히든 폼 방식)
   if (SHEET_URL) {
-    sendToSheet({ name: name, phone: phone, date: todayKey(), code: code });
+    sendToSheet({ name: name, phone: fullPhone, date: todayKey(), code: code });
   }
 
   renderChallengeDetail();
@@ -157,7 +159,10 @@ function renderChallengeIntro() {
       </div>
       <div class="challenge-code-group">
         <label class="challenge-code-label">전화번호</label>
-        <input type="tel" id="challengePhoneInput" class="challenge-code-input" placeholder="010-0000-0000" maxlength="13" inputmode="tel">
+        <div class="phone-input-wrap">
+          <span class="phone-prefix">010-</span>
+          <input type="tel" id="challengePhoneInput" class="challenge-code-input phone-suffix" placeholder="0000-0000" maxlength="9" inputmode="tel">
+        </div>
       </div>
       <div class="challenge-code-group">
         <label class="challenge-code-label">참여코드 입력</label>
