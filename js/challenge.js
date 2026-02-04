@@ -354,10 +354,11 @@ function closeChallengeDetail() {
   document.body.style.overflow = '';
 }
 
+var _sheetImg = null;
 function sendToSheet(data) {
   var params = Object.keys(data).map(function(key) {
     return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
   }).join('&');
-  var img = new Image();
-  img.src = SHEET_URL + '?' + params;
+  _sheetImg = new Image();
+  _sheetImg.src = SHEET_URL + '?' + params;
 }
