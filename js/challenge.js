@@ -322,8 +322,8 @@ function renderChallengeComplete(p) {
   const ch = loadChallenge();
   const applied = ch && ch.applied;
   const couponBtn = applied
-    ? `<div class="challenge-applied">✅ 응모 완료!</div>`
-    : `<button class="challenge-coupon-btn" onclick="applyChallengeCoupon()">응모권 받기</button>`;
+    ? `<div class="challenge-applied"><span class="challenge-applied-icon">🎊</span><span class="challenge-applied-text">두근두근 응모완료!</span></div>`
+    : `<button class="challenge-coupon-btn" onclick="applyChallengeCoupon()">응모하기!</button>`;
 
   return `
     <div class="challenge-complete">
