@@ -236,7 +236,7 @@ function renderToday() {
           </div>
           <div class="stock-area">
             <div class="stock-badge ${lowStock ? 'low' : ''}" style="${!lowStock ? 'background:' + clr.border + '40; color:' + clr.text : ''}">${s.stock}일분</div>
-            ${lowStock ? '<a class="buy-btn" href="https://meditial.co.kr/" target="_blank"><span class="buy-btn-icon">🛒</span><span class="buy-btn-text">할인받고 구매</span><span class="buy-btn-shine"></span></a>' : ''}
+            ${lowStock ? `<a class="buy-btn" href="${getSuppUrl(s.name)}" target="_blank"><span class="buy-btn-icon">🛒</span><span class="buy-btn-text">할인받고 구매</span><span class="buy-btn-shine"></span></a>` : ''}
           </div>
         </div>`;
     });

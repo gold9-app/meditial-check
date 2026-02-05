@@ -27,6 +27,20 @@ const SUPP_COLORS_DARK = {
   '활성엽산':     { bg: 'rgba(167,139,250,0.1)', border: 'rgba(216,180,254,0.3)', bar: '#c084fc', text: '#d8b4fe' },
   '상어연골환':   { bg: 'rgba(192,132,252,0.1)', border: 'rgba(233,213,255,0.3)', bar: '#d8b4fe', text: '#e9d5ff' },
 };
+const SUPP_URLS = {
+  '블러드싸이클': 'https://meditial.co.kr/product/detail.html?product_no=26&cafe_mkt=ue_MAPP_BC',
+  '헬리컷':       'https://meditial.co.kr/product/detail.html?product_no=63&cafe_mkt=ue_MAPP_HC',
+  '판토오틴':     'https://meditial.co.kr/product/detail.html?product_no=25&cafe_mkt=ue_MAPP_PT',
+  '글루타치온':   'https://meditial.co.kr/product/detail.html?product_no=38&cafe_mkt=ue_MAPP_GT',
+  '멜라토닌':     'https://meditial.co.kr/product/detail.html?product_no=66&cafe_mkt=ue_MAPP_MT',
+  '혈당컷':       'https://meditial.co.kr/product/detail.html?product_no=52&cafe_mkt=ue_MAPP_GC',
+  '활성엽산':     'https://meditial.co.kr/product/detail.html?product_no=62&cafe_mkt=ue_MAPP_PF',
+  '상어연골환':   'https://meditial.co.kr/product/detail.html?product_no=25&cafe_mkt=ue_MAPP_PT',
+};
+function getSuppUrl(name) {
+  return SUPP_URLS[name] || 'https://meditial.co.kr/';
+}
+
 function getSuppColor(name) {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const palette = isDark ? SUPP_COLORS_DARK : SUPP_COLORS;
