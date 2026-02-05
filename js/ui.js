@@ -159,6 +159,7 @@ function closeEventDetail() {
 // --- Repurchase Popup ---
 function showRepurchasePopup(name) {
   document.getElementById('repurchaseName').textContent = name;
+  document.querySelector('.repurchase-buy').href = getSuppUrl(name);
   document.getElementById('repurchasePopup').classList.add('active');
 }
 function closeRepurchasePopup() {
