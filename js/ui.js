@@ -180,7 +180,6 @@ function showTipPopup(suppName, tipData) {
   document.getElementById('tipSuppName').textContent = suppName;
   document.getElementById('tipSuppName').style.color = clr.text;
   document.getElementById('tipText').textContent = tipData.tip;
-  document.getElementById('tipCounter').textContent = `${tipData.current} / ${tipData.total}`;
   document.getElementById('tipPopup').classList.add('active');
 }
 function closeTipPopup() {

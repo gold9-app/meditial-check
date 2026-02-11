@@ -1779,13 +1779,8 @@ body {
   padding: 16px;
   background: var(--bg-secondary);
   border-radius: var(--radius-md);
-  text-align: left;
+  text-align: center;
   word-break: keep-all;
-}
-.tip-popup-counter {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-bottom: 16px;
 }
 .tip-popup-close {
   padding: var(--space-md) var(--space-xl);
