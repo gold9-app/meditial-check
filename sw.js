@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meditial-v57';
+const CACHE_NAME = 'meditial-v58';
 const ASSETS = [
   './',
   './index.html',
@@ -12,7 +12,8 @@ const ASSETS = [
   './js/manage.js',
   './js/events.js',
   './js/challenge.js',
-  './js/app.js'
+  './js/app.js',
+  './카카오로그인.png'
 ];
 
 // Install: cache core assets
