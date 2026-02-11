@@ -281,6 +281,14 @@ function toggleCheck(id, event) {
       setTimeout(() => fireBigConfetti(), 300);
     }
 
+    // Show tip popup
+    if (typeof getNextTip === 'function') {
+      const tipData = getNextTip(supp.name);
+      if (tipData) {
+        setTimeout(() => showTipPopup(supp.name, tipData), 400);
+      }
+    }
+
     // Past date all done → prompt to go back to today
     if (allDone && !isSelectedToday()) {
       saveRecords(records);

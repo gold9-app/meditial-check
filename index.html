@@ -372,6 +372,20 @@
   </div>
 </div>
 
+<!-- Tip Popup -->
+<div class="tip-popup-overlay" id="tipPopup">
+  <div class="tip-popup-content">
+    <div class="tip-popup-header">
+      <span class="tip-popup-icon">💡</span>
+      <span class="tip-popup-title">오늘의 꿀팁</span>
+    </div>
+    <div class="tip-popup-supp" id="tipSuppName"></div>
+    <div class="tip-popup-text" id="tipText"></div>
+    <div class="tip-popup-counter" id="tipCounter"></div>
+    <button class="tip-popup-close" onclick="closeTipPopup()">확인</button>
+  </div>
+</div>
+
 <!-- Badge Detail Modal -->
 <div class="badge-detail-overlay" id="badgeDetail">
   <div class="badge-detail-content" id="badgeDetailContent">
@@ -480,6 +494,7 @@
 </div>
 
 <script src="js/data.js"></script>
+<script src="js/tips.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/badges.js"></script>
 <script src="js/notifications.js"></script>

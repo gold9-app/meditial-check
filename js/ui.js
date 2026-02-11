@@ -173,3 +173,16 @@ function toggleGuide(btn) {
   const isOpen = btn.classList.contains('open');
   btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
+
+// --- Tip Popup ---
+function showTipPopup(suppName, tipData) {
+  const clr = getSuppColor(suppName);
+  document.getElementById('tipSuppName').textContent = suppName;
+  document.getElementById('tipSuppName').style.color = clr.text;
+  document.getElementById('tipText').textContent = tipData.tip;
+  document.getElementById('tipCounter').textContent = `${tipData.current} / ${tipData.total}`;
+  document.getElementById('tipPopup').classList.add('active');
+}
+function closeTipPopup() {
+  document.getElementById('tipPopup').classList.remove('active');
+}
