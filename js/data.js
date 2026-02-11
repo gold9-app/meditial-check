@@ -13,7 +13,7 @@ const SUPP_COLORS = {
   '판토오틴':     { bg: '#eff6ff', border: '#93c5fd', bar: '#3b82f6', text: '#2563eb' },
   '글루타치온':   { bg: '#fdf2f8', border: '#f9a8d4', bar: '#ec4899', text: '#db2777' },
   '멜라토닌':     { bg: '#f5f3ff', border: '#c4b5fd', bar: '#8b5cf6', text: '#7c3aed' },
-  '혈당컷':       { bg: '#f7fee7', border: '#bef264', bar: '#84cc16', text: '#65a30d' },
+  '글루코컷 혈당케어':       { bg: '#f7fee7', border: '#bef264', bar: '#84cc16', text: '#65a30d' },
   '활성엽산':     { bg: '#f3f0ff', border: '#d8b4fe', bar: '#a78bfa', text: '#8b5cf6' },
   '상어연골환':   { bg: '#faf5ff', border: '#e9d5ff', bar: '#c084fc', text: '#a855f7' },
 };
@@ -23,7 +23,7 @@ const SUPP_COLORS_DARK = {
   '판토오틴':     { bg: 'rgba(59,130,246,0.1)', border: 'rgba(147,197,253,0.3)', bar: '#60a5fa', text: '#93c5fd' },
   '글루타치온':   { bg: 'rgba(236,72,153,0.1)', border: 'rgba(249,168,212,0.3)', bar: '#f472b6', text: '#f9a8d4' },
   '멜라토닌':     { bg: 'rgba(139,92,246,0.1)', border: 'rgba(196,181,253,0.3)', bar: '#a78bfa', text: '#c4b5fd' },
-  '혈당컷':       { bg: 'rgba(132,204,22,0.1)', border: 'rgba(190,242,100,0.3)', bar: '#a3e635', text: '#bef264' },
+  '글루코컷 혈당케어':       { bg: 'rgba(132,204,22,0.1)', border: 'rgba(190,242,100,0.3)', bar: '#a3e635', text: '#bef264' },
   '활성엽산':     { bg: 'rgba(167,139,250,0.1)', border: 'rgba(216,180,254,0.3)', bar: '#c084fc', text: '#d8b4fe' },
   '상어연골환':   { bg: 'rgba(192,132,252,0.1)', border: 'rgba(233,213,255,0.3)', bar: '#d8b4fe', text: '#e9d5ff' },
 };
@@ -33,7 +33,7 @@ const SUPP_URLS = {
   '판토오틴':     'https://meditial.co.kr/product/detail.html?product_no=25&cafe_mkt=ue_MAPP_PT',
   '글루타치온':   'https://meditial.co.kr/product/detail.html?product_no=38&cafe_mkt=ue_MAPP_GT',
   '멜라토닌':     'https://meditial.co.kr/product/detail.html?product_no=66&cafe_mkt=ue_MAPP_MT',
-  '혈당컷':       'https://meditial.co.kr/product/detail.html?product_no=52&cafe_mkt=ue_MAPP_GC',
+  '글루코컷 혈당케어':       'https://meditial.co.kr/product/detail.html?product_no=52&cafe_mkt=ue_MAPP_GC',
   '활성엽산':     'https://meditial.co.kr/product/detail.html?product_no=62&cafe_mkt=ue_MAPP_PF',
   '상어연골환':   'https://meditial.co.kr/product/detail.html?product_no=25&cafe_mkt=ue_MAPP_PT',
 };
