@@ -158,10 +158,11 @@ function createCoupon() {
   const coupons = loadCoupons();
   const couponNum = coupons.length + 1;
   const serial = COUPON_SERIALS[coupons.length] || '';
+  const numText = couponNum === 1 ? '첫번째' : couponNum === 2 ? '두번째' : couponNum === 3 ? '세번째' : couponNum === 4 ? '네번째' : couponNum + '번째';
 
   const newCoupon = {
     id: couponNum,
-    name: `목표 달성 ${couponNum === 1 ? '첫번째' : couponNum === 2 ? '두번째' : couponNum === 3 ? '세번째' : couponNum === 4 ? '네번째' : couponNum + '번째'} 쿠폰`,
+    name: `목표 달성 ${numText}! 5천원 적립 쿠폰`,
     serial: serial,
     createdAt: todayKey()
   };
