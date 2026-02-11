@@ -9,29 +9,71 @@ function renderManage() {
         <div class="empty-title">영양제를 추가해보세요</div>
         <div class="empty-desc">위의 버튼을 눌러 복용 중인<br>영양제를 등록할 수 있어요.</div>
       </div>`;
+  } else {
+    let html = '';
+    list.forEach(s => {
+      const lowStock = s.stock <= 3;
+      const clr = getSuppColor(s.name);
+      html += `
+        <div class="manage-card" style="border-left: 4px solid ${clr.bar}; background: ${clr.bg}">
+          <div class="manage-card-header">
+            <span class="name" style="color:${clr.text}">${esc(s.name)}</span>
+            <div class="manage-card-actions">
+              <button onclick="openModal('${s.id}')" title="수정" aria-label="${esc(s.name)} 수정">✏️</button>
+              <button class="delete-btn" onclick="deleteSupplement('${s.id}')" title="삭제" aria-label="${esc(s.name)} 삭제">🗑️</button>
+            </div>
+          </div>
+          <div class="detail-row">${esc(s.time)} · ${esc(s.dose)}</div>
+          <div class="stock-row">
+            <span style="font-size:0.82rem;color:var(--text-muted)">재고:</span>
+            <span style="font-size:0.88rem;font-weight:700;color:${lowStock ? 'var(--red)' : clr.text}">${s.stock}일분</span>
+          </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  // 쿠폰함 렌더링
+  renderCouponList();
+}
+
+function renderCouponList() {
+  const coupons = loadCoupons();
+  const container = document.getElementById('couponList');
+
+  if (coupons.length === 0) {
+    container.innerHTML = `
+      <div class="coupon-empty">
+        <span class="coupon-empty-icon">🎟️</span>
+        <div class="coupon-empty-text">아직 받은 쿠폰이 없어요</div>
+        <div class="coupon-empty-desc">적립금 5,000원을 모으면<br>5,000원 쿠폰을 받을 수 있어요!</div>
+      </div>`;
     return;
   }
+
   let html = '';
-  list.forEach(s => {
-    const lowStock = s.stock <= 3;
-    const clr = getSuppColor(s.name);
+  coupons.forEach(coupon => {
+    const hasSerial = coupon.serial && coupon.serial.length > 0;
     html += `
-      <div class="manage-card" style="border-left: 4px solid ${clr.bar}; background: ${clr.bg}">
-        <div class="manage-card-header">
-          <span class="name" style="color:${clr.text}">${esc(s.name)}</span>
-          <div class="manage-card-actions">
-            <button onclick="openModal('${s.id}')" title="수정" aria-label="${esc(s.name)} 수정">✏️</button>
-            <button class="delete-btn" onclick="deleteSupplement('${s.id}')" title="삭제" aria-label="${esc(s.name)} 삭제">🗑️</button>
-          </div>
+      <div class="coupon-card">
+        <div class="coupon-card-header">
+          <span class="coupon-card-icon">🎟️</span>
+          <span class="coupon-card-name">${esc(coupon.name)}</span>
         </div>
-        <div class="detail-row">${esc(s.time)} · ${esc(s.dose)}</div>
-        <div class="stock-row">
-          <span style="font-size:0.82rem;color:var(--text-muted)">재고:</span>
-          <span style="font-size:0.88rem;font-weight:700;color:${lowStock ? 'var(--red)' : clr.text}">${s.stock}일분</span>
-        </div>
+        <div class="coupon-card-serial ${hasSerial ? '' : 'pending'}">${hasSerial ? coupon.serial : '시리얼 준비중'}</div>
+        <div class="coupon-card-date">발급일: ${coupon.createdAt}</div>
+        ${hasSerial ? `<button class="coupon-card-copy" onclick="copyCouponSerial('${coupon.serial}', this)">복사</button>` : ''}
       </div>`;
   });
   container.innerHTML = html;
+}
+
+function copyCouponSerial(serial, btn) {
+  navigator.clipboard.writeText(serial).then(() => {
+    const original = btn.textContent;
+    btn.textContent = '복사완료!';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
 }
 
 function deleteSupplement(id) {

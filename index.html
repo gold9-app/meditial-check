@@ -158,13 +158,14 @@
       <button class="period-btn" data-days="30" aria-label="최근 30일 통계">최근 30일</button>
     </div>
     <div class="stat-summary" id="statSummary"></div>
-    <div class="chart-section">
-      <h3>영양제별 복용률</h3>
-      <div id="chartBars"></div>
-    </div>
     <div class="calendar-section">
       <h3>복용 캘린더</h3>
       <div id="calendarHeatmap"></div>
+    </div>
+    <div id="conditionSection"></div>
+    <div class="chart-section">
+      <h3>영양제별 복용률</h3>
+      <div id="chartBars"></div>
     </div>
     <div id="badgeSection"></div>
   </div>
@@ -174,6 +175,10 @@
       <h3 class="manage-group-title">내 영양제 관리</h3>
       <button class="add-btn" onclick="openModal()">+ 영양제 추가</button>
       <div id="manageList"></div>
+    </div>
+    <div class="manage-group">
+      <h3 class="manage-group-title">내 쿠폰함</h3>
+      <div id="couponList"></div>
     </div>
     <div class="manage-group">
       <h3 class="manage-group-title">내 정보</h3>
@@ -360,6 +365,20 @@
   </div>
 </div>
 
+<!-- Goal Coupon Popup -->
+<div class="coupon-popup-overlay" id="goalCouponPopup">
+  <div class="coupon-popup-content">
+    <span class="coupon-popup-icon">🎊</span>
+    <div class="coupon-popup-title">목표 달성! 5,000원 쿠폰 획득!</div>
+    <div class="goal-coupon-name" id="goalCouponName"></div>
+    <div class="coupon-popup-code" id="goalCouponCode"></div>
+    <div class="coupon-popup-desc">캡쳐하거나 복사하세요!</div>
+    <button class="coupon-popup-copy goal-coupon-copy" onclick="copyGoalCouponCode()">쿠폰번호 복사</button>
+    <a class="coupon-popup-link" href="https://meditial.co.kr/myshop/coupon/coupon.html" target="_blank">쿠폰 입력하러가기</a>
+    <button class="coupon-popup-close" onclick="closeGoalCouponPopup()">닫기</button>
+  </div>
+</div>
+
 <!-- Badge Popup -->
 <div class="badge-popup-overlay" id="badgePopup">
   <div class="badge-popup-content">
@@ -402,6 +421,20 @@
     <span class="past-prompt-icon">💊</span>
     <div class="past-prompt-text">오늘도 꼭 드실 거죠?</div>
     <button class="past-prompt-yes" onclick="closePastPromptAndGoToday()">YES</button>
+  </div>
+</div>
+
+<!-- Condition Check Popup -->
+<div class="condition-popup-overlay" id="conditionPopup">
+  <div class="condition-popup">
+    <div class="condition-popup-header">
+      <button class="condition-popup-back" onclick="closeConditionCheck()" aria-label="닫기">← 뒤로</button>
+      <span class="condition-popup-title">오늘의 컨디션 체크</span>
+    </div>
+    <div class="condition-popup-body" id="conditionPopupBody"></div>
+    <div class="condition-popup-footer">
+      <button class="condition-save-btn" onclick="saveConditionCheck()">저장하기</button>
+    </div>
   </div>
 </div>
 
@@ -497,6 +530,7 @@
 <script src="js/ui.js"></script>
 <script src="js/badges.js"></script>
 <script src="js/notifications.js"></script>
+<script src="js/condition.js"></script>
 <script src="js/today.js"></script>
 <script src="js/stats.js"></script>
 <script src="js/manage.js"></script>

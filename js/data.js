@@ -127,3 +127,47 @@ function esc(str) {
   d.textContent = str;
   return d.innerHTML;
 }
+
+// --- Coupon System ---
+const COUPONS_KEY = 'supp_coupons';
+const COUPON_GOAL = 5000;
+
+// 쿠폰 시리얼 넘버 목록 (순서대로 발급)
+const COUPON_SERIALS = [
+  '6LEG5A5C70',  // 첫번째 쿠폰
+  '',            // 두번째 쿠폰 (추후 입력)
+  '',            // 세번째 쿠폰
+  '',            // 네번째 쿠폰
+  ''             // 다섯번째 쿠폰
+];
+
+function loadCoupons() {
+  try { return JSON.parse(localStorage.getItem(COUPONS_KEY) || '[]'); }
+  catch(e) { console.error('loadCoupons parse error', e); return []; }
+}
+
+function saveCoupons(list) {
+  localStorage.setItem(COUPONS_KEY, JSON.stringify(list));
+}
+
+function getCouponCount() {
+  return loadCoupons().length;
+}
+
+function createCoupon() {
+  const coupons = loadCoupons();
+  const couponNum = coupons.length + 1;
+  const serial = COUPON_SERIALS[coupons.length] || '';
+
+  const newCoupon = {
+    id: couponNum,
+    name: `목표 달성 ${couponNum === 1 ? '첫번째' : couponNum === 2 ? '두번째' : couponNum === 3 ? '세번째' : couponNum === 4 ? '네번째' : couponNum + '번째'} 쿠폰`,
+    serial: serial,
+    createdAt: todayKey()
+  };
+
+  coupons.push(newCoupon);
+  saveCoupons(coupons);
+
+  return newCoupon;
+}

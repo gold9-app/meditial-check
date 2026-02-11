@@ -106,6 +106,7 @@ function renderStats() {
   document.getElementById('chartBars').innerHTML = barsHtml;
 
   renderCalendar();
+  renderConditionSection();
   renderBadges();
 }
 
@@ -184,17 +185,6 @@ function renderCalendar() {
     <span>완벽</span>
   </div>`;
 
-  // Monthly savings summary
-  let monthPerfect = 0;
-  for (let d = 1; d <= lastDay.getDate(); d++) {
-    const dk = dateToKey(new Date(year, month, d));
-    if (new Date(year, month, d) > today) continue;
-    const dr = records[dk] || [];
-    if (list.every(s => dr.includes(s.id))) monthPerfect++;
-  }
-  const totalSavings = calcSavings();
-  html += `<div class="calendar-savings-summary">💰 총 적립금: <span>${totalSavings.toLocaleString()}원</span></div>`;
-
   container.innerHTML = html;
 }
 
@@ -221,4 +211,170 @@ function openDateCheck(dateKey) {
   document.querySelector('.nav-item[data-tab="today"]').classList.add('active');
   document.getElementById('today').classList.add('active');
   renderToday();
+}
+
+// --- Condition Section ---
+let conditionPeriod = 7; // 기본 1주
+
+function setConditionPeriod(days, btn) {
+  conditionPeriod = days;
+  document.querySelectorAll('.condition-period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderConditionSection();
+}
+
+function renderConditionSection() {
+  const container = document.getElementById('conditionSection');
+  if (!container) return;
+
+  const list = loadSupplements();
+  const conditions = loadConditions();
+
+  // 컨디션 데이터가 있는 영양제만 필터
+  const suppWithData = list.filter(s => {
+    if (!CONDITION_ITEMS || !CONDITION_ITEMS[s.name]) return false;
+    // 데이터가 있는지 확인
+    for (const dateKey in conditions) {
+      if (conditions[dateKey][s.name]) return true;
+    }
+    return false;
+  });
+
+  if (suppWithData.length === 0) {
+    container.innerHTML = `
+      <div class="condition-section">
+        <h3>컨디션 변화 추이</h3>
+        <div class="condition-section-empty">
+          <span class="condition-section-empty-icon">📈</span>
+          <div class="condition-section-empty-text">아직 컨디션 기록이 없어요</div>
+          <div class="condition-section-empty-desc">오늘 탭에서 컨디션을 체크하면<br>여기에 변화 추이가 나타나요!</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="condition-section">
+      <h3>컨디션 변화 추이</h3>
+      <div class="condition-period-btns">
+        <button class="condition-period-btn ${conditionPeriod === 7 ? 'active' : ''}" onclick="setConditionPeriod(7, this)">1주</button>
+        <button class="condition-period-btn ${conditionPeriod === 14 ? 'active' : ''}" onclick="setConditionPeriod(14, this)">2주</button>
+        <button class="condition-period-btn ${conditionPeriod === 21 ? 'active' : ''}" onclick="setConditionPeriod(21, this)">3주</button>
+        <button class="condition-period-btn ${conditionPeriod === 28 ? 'active' : ''}" onclick="setConditionPeriod(28, this)">4주</button>
+      </div>
+      <div class="condition-graphs">
+  `;
+
+  suppWithData.forEach(supp => {
+    const data = getConditionGraphData(supp.name, conditionPeriod);
+    const clr = getSuppColor(supp.name);
+
+    // 기간 내 변화율 계산 (첫 데이터 vs 마지막 데이터)
+    let periodChange = null;
+    if (data && data.length >= 2) {
+      const firstScore = data[0].score;
+      const lastScore = data[data.length - 1].score;
+      if (firstScore > 0) {
+        periodChange = Math.round(((lastScore - firstScore) / firstScore) * 100);
+      }
+    }
+
+    html += `
+      <div class="condition-graph-card" style="border-left: 4px solid ${clr.bar}">
+        <div class="condition-graph-header">
+          <span class="condition-graph-name" style="color: ${clr.text}">${esc(supp.name)}</span>
+    `;
+
+    if (periodChange !== null && periodChange > 0) {
+      html += `
+          <span class="condition-change positive">
+            ↑ ${periodChange}%
+          </span>
+      `;
+    }
+
+    html += `
+        </div>
+    `;
+
+    if (data && data.length >= 2) {
+      html += renderLineGraph(data, clr);
+    } else {
+      html += `
+        <div class="condition-graph-nodata">
+          데이터가 더 쌓이면 그래프가 나타나요
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+}
+
+function renderLineGraph(data, clr) {
+  if (!data || data.length < 2) return '';
+
+  const width = 280;
+  const height = 100;
+  const padding = { top: 10, right: 10, bottom: 25, left: 30 };
+  const graphWidth = width - padding.left - padding.right;
+  const graphHeight = height - padding.top - padding.bottom;
+
+  // 점수 범위 (1-5)
+  const minScore = 1;
+  const maxScore = 5;
+
+  // 데이터 포인트 좌표 계산
+  const points = data.map((d, i) => {
+    const x = padding.left + (i / (data.length - 1)) * graphWidth;
+    const y = padding.top + graphHeight - ((d.score - minScore) / (maxScore - minScore)) * graphHeight;
+    return { x, y, ...d };
+  });
+
+  // 라인 path
+  const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+  // 영역 path (fill용)
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${height - padding.bottom} L ${points[0].x} ${height - padding.bottom} Z`;
+
+  let svg = `
+    <svg class="condition-line-graph" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid meet">
+      <!-- Grid lines -->
+      <g class="grid-lines">
+  `;
+
+  // 수평 그리드 라인 (점수 1-5)
+  for (let i = 1; i <= 5; i++) {
+    const y = padding.top + graphHeight - ((i - minScore) / (maxScore - minScore)) * graphHeight;
+    svg += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="var(--border)" stroke-dasharray="2,2" />`;
+    svg += `<text x="${padding.left - 5}" y="${y + 4}" class="grid-label" text-anchor="end">${i}</text>`;
+  }
+
+  svg += `
+      </g>
+      <!-- Area fill -->
+      <path d="${areaPath}" fill="${clr.bg}" opacity="0.5" />
+      <!-- Line -->
+      <path d="${linePath}" fill="none" stroke="${clr.bar}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  `;
+
+  // X축 라벨 (첫번째와 마지막만)
+  if (points.length > 0) {
+    svg += `<text x="${points[0].x}" y="${height - 5}" class="x-label" text-anchor="middle">${points[0].label}</text>`;
+    if (points.length > 1) {
+      svg += `<text x="${points[points.length - 1].x}" y="${height - 5}" class="x-label" text-anchor="middle">${points[points.length - 1].label}</text>`;
+    }
+  }
+
+  svg += `</svg>`;
+
+  return svg;
 }

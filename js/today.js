@@ -104,7 +104,7 @@ function renderHeaderProgress() {
 }
 
 // --- Savings Calc & Track (Piggy Bank Runner) ---
-function calcSavings() {
+function calcTotalEarned() {
   const list = loadSupplements();
   if (list.length === 0) return 0;
   const records = loadRecords();
@@ -115,6 +115,23 @@ function calcSavings() {
   }
   const badgeRewards = loadBadgeRewards().length * 500;
   return perfectDays * 100 + badgeRewards;
+}
+
+function calcSavings() {
+  const totalEarned = calcTotalEarned();
+  const couponCount = getCouponCount();
+  const usedForCoupons = couponCount * COUPON_GOAL;
+  return Math.max(0, totalEarned - usedForCoupons);
+}
+
+function checkCouponGoal() {
+  const savings = calcSavings();
+  if (savings >= COUPON_GOAL) {
+    const newCoupon = createCoupon();
+    showGoalCouponPopup(newCoupon);
+    return true;
+  }
+  return false;
 }
 
 function renderSavingsTrack() {
@@ -218,6 +235,11 @@ function renderToday() {
           <span class="event-arrow">→</span>
         </div>`;
     }
+  }
+
+  // 컨디션 체크 버튼 (복용 완료 시 강조)
+  if (isSelectedToday() && typeof renderConditionCheckButton === 'function') {
+    html += renderConditionCheckButton();
   }
 
   sortedTimes.forEach(time => {
@@ -340,6 +362,10 @@ function toggleCheck(id, event) {
   saveRecords(records);
   saveSupplements(list);
   renderToday();
-  if (isChecking) checkBadges();
-  else recheckBadges();
+  if (isChecking) {
+    checkBadges();
+    checkCouponGoal();
+  } else {
+    recheckBadges();
+  }
 }

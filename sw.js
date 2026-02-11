@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meditial-v68';
+const CACHE_NAME = 'meditial-v72';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './js/ui.js',
   './js/badges.js',
   './js/notifications.js',
+  './js/condition.js',
   './js/today.js',
   './js/stats.js',
   './js/manage.js',

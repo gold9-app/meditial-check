@@ -185,3 +185,30 @@ function showTipPopup(suppName, tipData) {
 function closeTipPopup() {
   document.getElementById('tipPopup').classList.remove('active');
 }
+
+// --- Goal Coupon Popup ---
+function showGoalCouponPopup(coupon) {
+  document.getElementById('goalCouponName').textContent = coupon.name;
+  document.getElementById('goalCouponCode').textContent = coupon.serial || '시리얼 준비중';
+  document.getElementById('goalCouponPopup').classList.add('active');
+  fireBigConfetti();
+  vibrate([50, 100, 50, 100, 50]);
+}
+
+function closeGoalCouponPopup() {
+  document.getElementById('goalCouponPopup').classList.remove('active');
+  renderToday();
+  if (document.getElementById('stats').classList.contains('active')) renderStats();
+}
+
+function copyGoalCouponCode() {
+  const code = document.getElementById('goalCouponCode').textContent;
+  if (code && code !== '시리얼 준비중') {
+    navigator.clipboard.writeText(code).then(() => {
+      const btn = document.querySelector('.goal-coupon-copy');
+      const original = btn.textContent;
+      btn.textContent = '복사완료!';
+      setTimeout(() => btn.textContent = original, 1500);
+    });
+  }
+}
