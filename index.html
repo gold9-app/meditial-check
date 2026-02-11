@@ -27,11 +27,34 @@
       <div class="welcome-icon">💊</div>
       <div class="welcome-title">MEDITIAL</div>
       <div class="welcome-desc">매일 건강에 한걸음 나아가고<br>적립금도 받아가세요!</div>
-      <label for="nicknameInput" class="sr-only">이름</label>
-      <input type="text" id="nicknameInput" placeholder="이름을 입력하세요 (필수)" maxlength="10" onkeydown="if(event.key==='Enter')saveNickname()">
-      <label class="birthday-label" for="birthdayInput">생년월일</label>
-      <input type="date" id="birthdayInput" class="birthday-input">
-      <button class="welcome-btn" onclick="saveNickname()">시작하기</button>
+
+      <!-- 1단계: 카카오 로그인 -->
+      <div id="loginStep1">
+        <button class="kakao-login-btn" onclick="openKakaoLogin()">
+          <img src="카카오로그인.png" alt="카카오 로그인">
+        </button>
+        <p class="login-hint">메디셜 회원가입/로그인 페이지로 이동합니다</p>
+      </div>
+
+      <!-- 2단계: 정보 입력 -->
+      <div id="loginStep2" style="display:none;">
+        <div class="profile-setup">
+          <div class="profile-setup-title">프로필 설정</div>
+          <div class="profile-setup-desc">앱에서 사용할 정보를 입력해주세요</div>
+
+          <div class="profile-field">
+            <label for="nicknameInput">닉네임</label>
+            <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" maxlength="10">
+          </div>
+
+          <div class="profile-field">
+            <label for="birthdayInput">생년월일</label>
+            <input type="date" id="birthdayInput">
+          </div>
+
+          <button class="profile-submit-btn" onclick="saveProfile()">시작하기</button>
+        </div>
+      </div>
     </div>
   </div>
 

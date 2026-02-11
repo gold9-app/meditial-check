@@ -1,3 +1,65 @@
+// --- Kakao Login ---
+function openKakaoLogin() {
+  // 카페24 로그인 페이지를 팝업으로 열기
+  const popup = window.open(
+    'https://meditial.co.kr/member/login.html',
+    'kakaoLogin',
+    'width=480,height=700,scrollbars=yes'
+  );
+
+  // 팝업이 닫히는지 감시
+  const checkPopup = setInterval(() => {
+    if (!popup || popup.closed) {
+      clearInterval(checkPopup);
+      // 팝업 닫히면 프로필 설정 단계로 전환
+      showProfileSetup();
+    }
+  }, 500);
+}
+
+function showProfileSetup() {
+  document.getElementById('loginStep1').style.display = 'none';
+  document.getElementById('loginStep2').style.display = 'block';
+}
+
+function saveProfile() {
+  const nicknameInput = document.getElementById('nicknameInput');
+  const birthdayInput = document.getElementById('birthdayInput');
+
+  const name = nicknameInput.value.trim();
+  const birthday = birthdayInput.value;
+
+  // 유효성 검사
+  if (!name) {
+    nicknameInput.focus();
+    nicknameInput.classList.add('shake');
+    setTimeout(() => nicknameInput.classList.remove('shake'), 500);
+    return;
+  }
+
+  if (!birthday) {
+    birthdayInput.focus();
+    birthdayInput.classList.add('shake');
+    setTimeout(() => birthdayInput.classList.remove('shake'), 500);
+    return;
+  }
+
+  // 저장
+  localStorage.setItem('supp_nickname', name);
+  localStorage.setItem('supp_birthday', birthday);
+  localStorage.setItem('supp_logged_in', 'true');
+
+  // 닉네임 표시
+  displayNickname(name);
+  displayBirthday();
+
+  // 웰컴 오버레이 닫기
+  const overlay = document.getElementById('welcomeOverlay');
+  overlay.classList.add('fade-out');
+  document.querySelector('.bottom-nav').style.display = '';
+  setTimeout(() => { overlay.style.display = 'none'; }, 400);
+}
+
 // --- Nickname & Birthday ---
 function initNickname() {
   const nickname = localStorage.getItem('supp_nickname');
