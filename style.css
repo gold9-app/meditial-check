@@ -1749,13 +1749,14 @@ body {
 }
 .tip-popup-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   margin-bottom: 12px;
 }
 .tip-popup-icon {
-  font-size: 1.5rem;
+  font-size: 2rem;
+  margin-bottom: 4px;
 }
 .tip-popup-title {
   font-size: 1.1rem;
