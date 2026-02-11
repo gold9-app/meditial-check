@@ -1,10 +1,16 @@
 // --- Kakao Login ---
 function openKakaoLogin() {
+  // 팝업 크기 및 위치 계산 (화면 중앙, 작은 크기)
+  const w = 360;
+  const h = 500;
+  const left = (screen.width - w) / 2;
+  const top = (screen.height - h) / 2;
+
   // 카페24 로그인 페이지를 팝업으로 열기
   const popup = window.open(
     'https://meditial.co.kr/member/login.html',
     'kakaoLogin',
-    'width=480,height=700,scrollbars=yes'
+    `width=${w},height=${h},left=${left},top=${top},scrollbars=yes`
   );
 
   // 팝업이 닫히는지 감시
