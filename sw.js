@@ -1,4 +1,4 @@
-const CACHE_NAME = 'meditial-v61';
+const CACHE_NAME = 'meditial-v62';
 const ASSETS = [
   './',
   './index.html',

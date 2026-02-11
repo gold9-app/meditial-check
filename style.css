@@ -3383,10 +3383,15 @@ body {
   text-align: center;
 }
 .login-hint-warning {
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: #fbbf24;
   text-align: center;
-  margin-top: var(--space-base);
+  margin-top: var(--space-lg);
+  padding: 16px 20px;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: var(--radius-md);
+  line-height: 1.5;
 }
 
 /* Profile Setup (모바일 친화적) */
