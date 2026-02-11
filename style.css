@@ -3382,16 +3382,37 @@ body {
   margin-top: var(--space-sm);
   text-align: center;
 }
-.login-hint-warning {
-  font-size: var(--text-base);
-  color: #fbbf24;
-  text-align: center;
-  margin-top: var(--space-lg);
+/* Login Guide Card */
+.login-guide-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: var(--space-xl);
   padding: 16px 20px;
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.login-guide-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  animation: bounce-icon 2s ease-in-out infinite;
+}
+@keyframes bounce-icon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.login-guide-text {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.85);
   line-height: 1.5;
+  text-align: left;
+}
+.login-guide-text span {
+  color: #fff;
+  font-weight: 700;
 }
 
 /* Profile Setup (모바일 친화적) */
