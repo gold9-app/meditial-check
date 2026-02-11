@@ -13,6 +13,11 @@ function openKakaoLogin() {
     `width=${w},height=${h},left=${left},top=${top},scrollbars=yes`
   );
 
+  // 안내 메시지 변경
+  const hint = document.getElementById('loginHint');
+  hint.innerHTML = '로그인 완료 후 <strong>열린 창을 닫아주세요!</strong>';
+  hint.classList.add('login-hint-active');
+
   // 팝업이 닫히는지 감시
   const checkPopup = setInterval(() => {
     if (!popup || popup.closed) {
