@@ -128,6 +128,63 @@ function esc(str) {
   return d.innerHTML;
 }
 
+// --- Notification Settings ---
+const NOTIF_SETTINGS_KEY = 'supp_notif_settings';
+
+const DEFAULT_NOTIF_SETTINGS = {
+  enabled: true,              // 전체 알림 on/off
+  reminderTime: '21:00',      // 저녁 리마인더 시간
+  reminderEnabled: true,      // 저녁 리마인더 on/off
+  repeatEnabled: true,        // 재알림 on/off
+  weeklyEnabled: true,        // 주간 요약 on/off
+  stockEnabled: true,         // 재고 소진 예측 on/off
+  missedEnabled: true,        // 연속 미복용 경고 on/off
+  streakEnabled: true,        // 스트릭 알림 on/off
+  badgeEnabled: true,         // 뱃지 근접 알림 on/off
+  encourageEnabled: true,     // 격려 메시지 on/off
+  challengeEnabled: true,     // 챌린지 알림 on/off
+};
+
+function loadNotifSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(NOTIF_SETTINGS_KEY) || '{}');
+    return { ...DEFAULT_NOTIF_SETTINGS, ...saved };
+  } catch(e) {
+    console.error('loadNotifSettings parse error', e);
+    return { ...DEFAULT_NOTIF_SETTINGS };
+  }
+}
+
+function saveNotifSettings(settings) {
+  localStorage.setItem(NOTIF_SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function getNotifSetting(key) {
+  return loadNotifSettings()[key];
+}
+
+function setNotifSetting(key, value) {
+  const settings = loadNotifSettings();
+  settings[key] = value;
+  saveNotifSettings(settings);
+}
+
+// 영양제별 알림 설정
+function getSuppNotifEnabled(suppId) {
+  const list = loadSupplements();
+  const supp = list.find(s => s.id === suppId);
+  return supp ? (supp.notifEnabled !== false) : true; // 기본값 true
+}
+
+function setSuppNotifEnabled(suppId, enabled) {
+  const list = loadSupplements();
+  const supp = list.find(s => s.id === suppId);
+  if (supp) {
+    supp.notifEnabled = enabled;
+    saveSupplements(list);
+  }
+}
+
 // --- Coupon System ---
 const COUPONS_KEY = 'supp_coupons';
 const COUPON_GOAL = 5000;

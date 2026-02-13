@@ -4128,3 +4128,261 @@ body {
   background: var(--accent);
   color: #fff;
 }
+
+/* ========================================
+   Notification Settings
+   ======================================== */
+
+/* 알림 설정 버튼 */
+.notif-settings-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.notif-settings-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+}
+.notif-settings-btn-icon {
+  font-size: 1.5rem;
+  margin-right: 12px;
+}
+.notif-settings-btn-text {
+  flex: 1;
+  text-align: left;
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.notif-settings-btn-arrow {
+  font-size: var(--text-lg);
+  color: var(--text-muted);
+}
+
+/* 알림 설정 팝업 오버레이 */
+.notif-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-primary);
+  z-index: 1000;
+  display: none;
+  flex-direction: column;
+}
+.notif-settings-overlay.active {
+  display: flex;
+}
+
+/* 알림 설정 팝업 */
+.notif-settings-popup {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* 알림 설정 헤더 */
+.notif-settings-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.notif-settings-back {
+  background: none;
+  border: none;
+  font-size: var(--text-base);
+  color: var(--accent);
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-left: -12px;
+  font-family: 'Inter', sans-serif;
+}
+.notif-settings-title {
+  flex: 1;
+  text-align: center;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 48px;
+}
+
+/* 알림 설정 바디 */
+.notif-settings-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  padding-bottom: 100px;
+}
+
+/* 알림 설정 그룹 */
+.notif-setting-group {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.notif-setting-group.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.notif-setting-group.collapsed .notif-setting-body {
+  display: none;
+}
+.notif-setting-group.collapsed .notif-group-arrow {
+  transform: rotate(-90deg);
+}
+
+/* 그룹 헤더 */
+.notif-setting-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+.notif-setting-header:hover {
+  background: var(--border);
+}
+.notif-group-arrow {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+/* 그룹 바디 */
+.notif-setting-body {
+  padding: 8px 0;
+}
+
+/* 설정 행 */
+.notif-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+.notif-setting-row.main-toggle {
+  background: var(--accent-bg);
+  border-radius: var(--radius-md);
+}
+.notif-setting-label {
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+/* 토글 스위치 */
+.notif-toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+.notif-toggle.small {
+  width: 40px;
+  height: 22px;
+}
+.notif-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.notif-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border);
+  transition: 0.3s;
+  border-radius: 26px;
+}
+.notif-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.notif-toggle.small .notif-toggle-slider:before {
+  height: 16px;
+  width: 16px;
+}
+.notif-toggle input:checked + .notif-toggle-slider {
+  background-color: var(--accent);
+}
+.notif-toggle input:checked + .notif-toggle-slider:before {
+  transform: translateX(22px);
+}
+.notif-toggle.small input:checked + .notif-toggle-slider:before {
+  transform: translateX(18px);
+}
+
+/* 시간 입력 */
+.notif-time-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* 영양제별 알림 설정 */
+.notif-supp-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin: 4px 8px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+}
+.notif-supp-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.notif-supp-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.notif-supp-time {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+/* 빈 상태 */
+.notif-empty {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}

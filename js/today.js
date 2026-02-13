@@ -301,6 +301,17 @@ function toggleCheck(id, event) {
     if (allDone) {
       vibrate([50, 50, 100]);
       setTimeout(() => fireBigConfetti(), 300);
+
+      // 격려 메시지 알림 (20% 확률)
+      if (typeof showEncourageNotification === 'function') {
+        showEncourageNotification();
+      }
+
+      // 스트릭 달성 알림
+      if (typeof showStreakAchievement === 'function') {
+        const streak = calculateStreak();
+        showStreakAchievement(streak);
+      }
     }
 
     // Show tip popup
