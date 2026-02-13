@@ -1,7 +1,8 @@
-const CACHE_NAME = 'meditial-v75';
+const CACHE_NAME = 'meditial-v76';
 const ASSETS = [
   './',
   './index.html',
+  './privacy.html',
   './style.css',
   './js/data.js',
   './js/tips.js',

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개인정보처리방침 - 메디셜 영양제 체크</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.8;
+  color: #333;
+  background: #f8fafc;
+  padding: 20px;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+h1 {
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.app-name {
+  text-align: center;
+  color: #2563eb;
+  font-weight: 600;
+  margin-bottom: 32px;
+}
+h2 {
+  font-size: 1.2rem;
+  color: #1e293b;
+  margin-top: 32px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+h3 {
+  font-size: 1rem;
+  color: #475569;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+p, li {
+  color: #475569;
+  margin-bottom: 12px;
+}
+ul {
+  padding-left: 24px;
+}
+li {
+  margin-bottom: 8px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+th, td {
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  text-align: left;
+}
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #1e293b;
+}
+.highlight {
+  background: #eff6ff;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+  border-left: 4px solid #2563eb;
+}
+.date {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>개인정보처리방침</h1>
+  <p class="app-name">메디셜 영양제 체크</p>
+
+  <p>주식회사 넥스트제너레이션(이하 "회사")은 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보처리방침을 수립·공개합니다.</p>
+
+  <h2>제1조 (개인정보의 처리 목적)</h2>
+  <p>회사는 다음의 목적을 위하여 개인정보를 처리합니다.</p>
+  <ul>
+    <li><strong>서비스 제공:</strong> 영양제 복용 기록 관리, 통계 제공, 알림 서비스</li>
+    <li><strong>이벤트 운영:</strong> 챌린지 참여 및 경품 제공</li>
+    <li><strong>서비스 개선:</strong> 이용 현황 분석 및 서비스 품질 향상</li>
+  </ul>
+
+  <h2>제2조 (수집하는 개인정보 항목)</h2>
+
+  <h3>1. 필수 수집 항목</h3>
+  <table>
+    <tr>
+      <th>항목</th>
+      <th>수집 목적</th>
+      <th>저장 위치</th>
+    </tr>
+    <tr>
+      <td>닉네임</td>
+      <td>앱 내 사용자 식별</td>
+      <td>기기 내 저장 (localStorage)</td>
+    </tr>
+    <tr>
+      <td>생년월일</td>
+      <td>생일 축하 서비스</td>
+      <td>기기 내 저장 (localStorage)</td>
+    </tr>
+  </table>
+
+  <h3>2. 선택 수집 항목 (챌린지 참여 시)</h3>
+  <table>
+    <tr>
+      <th>항목</th>
+      <th>수집 목적</th>
+      <th>저장 위치</th>
+    </tr>
+    <tr>
+      <td>휴대폰 번호</td>
+      <td>챌린지 참여 확인 및 경품 발송</td>
+      <td>회사 서버 (Google Sheets)</td>
+    </tr>
+  </table>
+
+  <div class="highlight">
+    <strong>중요 안내:</strong> 본 앱은 대부분의 데이터를 사용자의 기기 내(localStorage)에만 저장하며, 외부 서버로 전송하지 않습니다. 다만, 챌린지 참여 시 입력하는 휴대폰 번호는 경품 발송을 위해 회사 서버에 저장됩니다.
+  </div>
+
+  <h2>제3조 (개인정보의 처리 및 보유 기간)</h2>
+  <ul>
+    <li><strong>기기 내 저장 데이터:</strong> 사용자가 앱을 초기화하거나 브라우저 데이터를 삭제할 때까지</li>
+    <li><strong>챌린지 참여 정보:</strong> 챌린지 종료 후 경품 발송 완료 시까지 (최대 1년)</li>
+  </ul>
+
+  <h2>제4조 (개인정보의 제3자 제공)</h2>
+  <p>회사는 이용자의 개인정보를 제1조에서 명시한 범위 내에서만 처리하며, 이용자의 동의 없이는 본래의 목적 범위를 초과하여 처리하거나 제3자에게 제공하지 않습니다.</p>
+
+  <h2>제5조 (개인정보의 파기)</h2>
+  <p>회사는 개인정보 보유기간의 경과, 처리목적 달성 등 개인정보가 불필요하게 되었을 때에는 지체 없이 해당 개인정보를 파기합니다.</p>
+  <ul>
+    <li><strong>기기 내 데이터:</strong> 앱 내 "앱 초기화" 기능을 통해 직접 삭제 가능</li>
+    <li><strong>서버 저장 데이터:</strong> 고객센터 요청 시 5일 이내 삭제</li>
+  </ul>
+
+  <h2>제6조 (이용자의 권리)</h2>
+  <p>이용자는 언제든지 다음의 권리를 행사할 수 있습니다:</p>
+  <ul>
+    <li>개인정보 열람 요구</li>
+    <li>오류 등이 있을 경우 정정 요구</li>
+    <li>삭제 요구</li>
+    <li>처리정지 요구</li>
+  </ul>
+
+  <h2>제7조 (앱에서 사용하는 권한)</h2>
+  <table>
+    <tr>
+      <th>권한</th>
+      <th>용도</th>
+      <th>필수 여부</th>
+    </tr>
+    <tr>
+      <td>알림 (Notification)</td>
+      <td>복용 시간 알림, 리마인더</td>
+      <td>선택</td>
+    </tr>
+    <tr>
+      <td>진동 (Vibration)</td>
+      <td>복용 체크 시 피드백</td>
+      <td>선택</td>
+    </tr>
+    <tr>
+      <td>클립보드</td>
+      <td>쿠폰 번호 복사</td>
+      <td>선택</td>
+    </tr>
+  </table>
+
+  <h2>제8조 (개인정보 보호책임자)</h2>
+  <table>
+    <tr>
+      <th>구분</th>
+      <th>내용</th>
+    </tr>
+    <tr>
+      <td>회사명</td>
+      <td>주식회사 넥스트제너레이션</td>
+    </tr>
+    <tr>
+      <td>서비스명</td>
+      <td>메디셜 영양제 체크</td>
+    </tr>
+    <tr>
+      <td>이메일</td>
+      <td>privacy@meditial.co.kr</td>
+    </tr>
+    <tr>
+      <td>웹사이트</td>
+      <td>https://meditial.co.kr</td>
+    </tr>
+  </table>
+
+  <h2>제9조 (개인정보처리방침 변경)</h2>
+  <p>이 개인정보처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가, 삭제 및 정정이 있는 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.</p>
+
+  <p class="date">
+    시행일자: 2025년 2월 13일<br>
+    최종 수정일: 2025년 2월 13일
+  </p>
+
+  <a href="index.html" class="back-link">← 앱으로 돌아가기</a>
+</div>
+</body>
+</html>
