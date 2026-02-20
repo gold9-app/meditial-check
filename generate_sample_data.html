@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>샘플 데이터 생성기</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+  }
+  .container {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  h1 {
+    color: #2563eb;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 30px;
+  }
+  .btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+  }
+  .btn:active {
+    transform: translateY(0);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  }
+  .btn-danger:hover {
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4);
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  }
+  .info {
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2563eb;
+  }
+  .info h3 {
+    margin-top: 0;
+    color: #2563eb;
+  }
+  .info ul {
+    margin: 10px 0;
+    padding-left: 20px;
+  }
+  .info li {
+    margin: 8px 0;
+    color: #475569;
+  }
+  .success {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    display: none;
+    border-left: 4px solid #10b981;
+  }
+  .warning {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f59e0b;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #94a3b8;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎨 샘플 데이터 생성기</h1>
+  <div class="subtitle">플레이 스토어 스크린샷용 1달치 데이터</div>
+
+  <div class="warning">
+    <strong>⚠️ 주의:</strong> 이 도구는 기존 데이터를 완전히 삭제하고 새 샘플 데이터로 교체합니다.<br>
+    실제 데이터가 있다면 먼저 백업하세요!
+  </div>
+
+  <div class="info">
+    <h3>📦 생성되는 데이터</h3>
+    <ul>
+      <li>✅ 영양제 5개 등록 (블러드싸이클, 헬리컷, 판토오틴, 퓨어톤부스트, 멜라토닌)</li>
+      <li>✅ 지난 30일 복용 기록 (85% 복용률)</li>
+      <li>✅ 스트릭 7일 달성</li>
+      <li>✅ 뱃지 5개 획득 (첫 걸음, 3일 연속, 퍼펙트 위크, 10알 돌파, 50알 돌파)</li>
+      <li>✅ 적립금 2,700원 (완벽한 날 22일 + 뱃지 500원)</li>
+      <li>✅ 컨디션 체크 기록 15일분</li>
+      <li>✅ 작심삼월 챌린지 참여 중 (30일 경과, 73% 달성률)</li>
+      <li>✅ 닉네임 & 생년월일 설정</li>
+    </ul>
+  </div>
+
+  <button class="btn" onclick="generateSampleData()">🚀 샘플 데이터 생성하기</button>
+  <button class="btn btn-danger" onclick="clearAllData()">🗑️ 모든 데이터 삭제</button>
+  <button class="btn btn-success" onclick="window.location.href='index.html'">📱 앱으로 돌아가기</button>
+
+  <div class="success" id="successMsg">
+    <strong>✅ 완료!</strong> 샘플 데이터가 생성되었습니다.<br>
+    이제 "앱으로 돌아가기" 버튼을 눌러 확인하세요!
+  </div>
+
+  <div class="footer">
+    메디셜 영양제 체크 앱 - 플레이 스토어 런칭 준비
+  </div>
+</div>
+
+<script>
+function dateToKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function generateSampleData() {
+  if (!confirm('기존 데이터를 모두 삭제하고 샘플 데이터를 생성하시겠습니까?')) {
+    return;
+  }
+
+  // 모든 기존 데이터 삭제
+  clearAllData();
+
+  const today = new Date();
+  const todayKey = dateToKey(today);
+
+  // 1. 닉네임 & 생년월일
+  localStorage.setItem('supp_nickname', '김건강');
+  localStorage.setItem('supp_birthday', '1990-05-15');
+  localStorage.setItem('supp_logged_in', 'true');
+
+  // 2. 영양제 5개 등록
+  const supplements = [
+    {
+      id: 'supp001',
+      name: '블러드싸이클',
+      time: '08:00',
+      dose: '1정',
+      stock: 25,
+      notifEnabled: true
+    },
+    {
+      id: 'supp002',
+      name: '헬리컷',
+      time: '08:00',
+      dose: '2정',
+      stock: 18,
+      notifEnabled: true
+    },
+    {
+      id: 'supp003',
+      name: '판토오틴',
+      time: '12:00',
+      dose: '1정',
+      stock: 12,
+      notifEnabled: true
+    },
+    {
+      id: 'supp004',
+      name: '퓨어톤부스트',
+      time: '12:00',
+      dose: '2정',
+      stock: 8,
+      notifEnabled: true
+    },
+    {
+      id: 'supp005',
+      name: '멜라토닌',
+      time: '21:00',
+      dose: '1정',
+      stock: 30,
+      notifEnabled: true
+    }
+  ];
+  localStorage.setItem('supp_data', JSON.stringify(supplements));
+
+  // 3. 지난 30일 복용 기록 생성 (85% 복용률)
+  const records = {};
+  const checkTimes = {};
+  let stockLog = {};
+
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = dateToKey(d);
+    records[key] = [];
+
+    supplements.forEach(supp => {
+      // 85% 확률로 복용 체크
+      if (Math.random() < 0.85) {
+        records[key].push(supp.id);
+
+        // 체크 시간 기록
+        const baseHour = parseInt(supp.time.split(':')[0]);
+        const hour = baseHour + Math.floor(Math.random() * 2);
+        const minute = Math.floor(Math.random() * 60);
+        checkTimes[`${key}_${supp.id}`] = `${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}`;
+
+        // 재고 로그
+        stockLog[`${key}_${supp.id}`] = true;
+      }
+    });
+  }
+  localStorage.setItem('supp_records', JSON.stringify(records));
+  localStorage.setItem('supp_check_times', JSON.stringify(checkTimes));
+  localStorage.setItem('supp_stock_log', JSON.stringify(stockLog));
+
+  // 4. 뱃지 획득 (자동으로 조건 충족된 것들)
+  const badges = {
+    'first_step': todayKey,
+    'streak_3': dateToKey(new Date(today.getTime() - 27 * 24 * 60 * 60 * 1000)),
+    'perfect_week': dateToKey(new Date(today.getTime() - 23 * 24 * 60 * 60 * 1000)),
+    'total_10': dateToKey(new Date(today.getTime() - 28 * 24 * 60 * 60 * 1000)),
+    'total_50': dateToKey(new Date(today.getTime() - 20 * 24 * 60 * 60 * 1000)),
+  };
+  localStorage.setItem('supp_badges', JSON.stringify(badges));
+
+  const badgeRewards = ['first_step', 'streak_3', 'perfect_week', 'total_10', 'total_50'];
+  localStorage.setItem('supp_badge_rewards', JSON.stringify(badgeRewards));
+
+  // 5. 쿠폰 (아직 없음 - 5000원 모아야 함)
+  localStorage.setItem('supp_coupons', JSON.stringify([]));
+
+  // 6. 컨디션 체크 (최근 15일)
+  const conditions = {};
+  for (let i = 14; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = dateToKey(d);
+
+    if (Math.random() < 0.7) { // 70% 확률로 컨디션 체크
+      conditions[key] = {};
+
+      // 블러드싸이클 컨디션
+      conditions[key]['블러드싸이클'] = {
+        complexion: Math.floor(Math.random() * 2) + 3, // 3-4점
+        fatigue: Math.floor(Math.random() * 2) + 3,
+        bloodPressure: Math.floor(Math.random() * 2) + 3
+      };
+
+      // 헬리컷 컨디션
+      conditions[key]['헬리컷'] = {
+        digestion: Math.floor(Math.random() * 2) + 3,
+        bloating: Math.floor(Math.random() * 2) + 3,
+        bowel: Math.floor(Math.random() * 2) + 3
+      };
+
+      // 멜라토닌 컨디션
+      conditions[key]['멜라토닌'] = {
+        sleepQuality: Math.floor(Math.random() * 2) + 4, // 4-5점
+        wakeRefresh: Math.floor(Math.random() * 2) + 4,
+        sleepSpeed: Math.floor(Math.random() * 2) + 3
+      };
+    }
+  }
+  localStorage.setItem('supp_condition', JSON.stringify(conditions));
+
+  // 컨디션 시작일
+  const conditionStarts = {
+    '블러드싸이클': dateToKey(new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000)),
+    '헬리컷': dateToKey(new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000)),
+    '멜라토닌': dateToKey(new Date(today.getTime() - 14 * 24 * 60 * 60 * 1000))
+  };
+  localStorage.setItem('supp_condition_start', JSON.stringify(conditionStarts));
+
+  // 7. 작심삼월 챌린지 (30일 전에 시작, 73% 달성률)
+  const challengeStartDate = new Date(today);
+  challengeStartDate.setDate(challengeStartDate.getDate() - 30);
+  const challenge = {
+    startDate: dateToKey(challengeStartDate),
+    completed: false,
+    phone: '010-1234-5678'
+  };
+  localStorage.setItem('supp_challenge', JSON.stringify(challenge));
+
+  // 8. 알림 설정
+  const notifSettings = {
+    enabled: true,
+    reminderTime: '21:00',
+    reminderEnabled: true,
+    repeatEnabled: true,
+    weeklyEnabled: true,
+    stockEnabled: true,
+    missedEnabled: true,
+    streakEnabled: true,
+    badgeEnabled: true,
+    encourageEnabled: true,
+    challengeEnabled: true
+  };
+  localStorage.setItem('supp_notif_settings', JSON.stringify(notifSettings));
+
+  // 9. 다크모드 설정
+  localStorage.setItem('darkMode', 'false');
+
+  // 완료 메시지
+  document.getElementById('successMsg').style.display = 'block';
+  alert('✅ 샘플 데이터 생성 완료!\n\n생성된 데이터:\n- 영양제 5개\n- 30일 복용 기록\n- 스트릭 7일\n- 뱃지 5개\n- 적립금 2,700원\n- 컨디션 기록 15일\n- 챌린지 참여 중\n\n"앱으로 돌아가기" 버튼을 눌러 확인하세요!');
+}
+
+function clearAllData() {
+  const keys = [
+    'supp_data',
+    'supp_records',
+    'supp_badges',
+    'supp_check_times',
+    'supp_badge_rewards',
+    'supp_challenge',
+    'supp_nickname',
+    'supp_birthday',
+    'supp_stock_log',
+    'supp_coupons',
+    'supp_condition',
+    'supp_condition_start',
+    'supp_notif_settings',
+    'supp_logged_in',
+    'darkMode'
+  ];
+
+  keys.forEach(key => localStorage.removeItem(key));
+
+  if (confirm('모든 데이터가 삭제되었습니다. 페이지를 새로고침하시겠습니까?')) {
+    location.reload();
+  }
+}
+</script>
+</body>
+</html>
