@@ -1,13 +1,18 @@
 {
+  "id": "/meditial-check/",
   "name": "메디셜 영양제 체크",
   "short_name": "메디셜",
   "description": "매일 영양제 복용을 관리하고 추적하세요",
+  "lang": "ko",
+  "dir": "ltr",
   "start_url": "/meditial-check/",
   "scope": "/meditial-check/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait",
+  "categories": ["health", "fitness", "lifestyle"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/meditial-check/icon-192.png",
@@ -27,5 +32,46 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "통계 보기",
+      "short_name": "통계",
+      "description": "복용 통계 및 그래프 확인",
+      "url": "/meditial-check/?tab=stats",
+      "icons": [
+        {
+          "src": "/meditial-check/icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "영양제 관리",
+      "short_name": "관리",
+      "description": "영양제 추가 및 관리",
+      "url": "/meditial-check/?tab=manage",
+      "icons": [
+        {
+          "src": "/meditial-check/icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "이벤트",
+      "short_name": "이벤트",
+      "description": "진행중인 이벤트 확인",
+      "url": "/meditial-check/?tab=event",
+      "icons": [
+        {
+          "src": "/meditial-check/icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "launch_handler": {
+    "client_mode": ["focus-existing", "auto"]
+  }
 }
