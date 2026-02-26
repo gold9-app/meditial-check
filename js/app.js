@@ -28,6 +28,11 @@ function showProfileSetup() {
   document.getElementById('loginStep2').style.display = 'block';
 }
 
+function skipLogin() {
+  // 카카오 로그인 없이 바로 프로필 설정으로 이동
+  showProfileSetup();
+}
+
 function saveProfile() {
   const nicknameInput = document.getElementById('nicknameInput');
   const birthdayInput = document.getElementById('birthdayInput');
